@@ -1,5 +1,5 @@
 {
-  "name": "logger-js",
+  "name": "@chrisq/logger-js",
   "version": "1.0.0",
   "description": "Java style logger",
   "main": "index.js",
