@@ -1,9 +1,22 @@
 {
   "name": "@chrisq/logger-js",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Java style logger",
   "main": "index.js",
   "author": "Chris Quin<chrisq@ingenuity.kiwi>",
   "license": "MIT",
-  "repository": "https://github.com/chrisjq/logger-js.git"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chrisjq/logger-js.git"
+  },
+  "keywords": [
+    "logging",
+    "logger",
+    "tools",
+    "java.util.logging",
+    "console",
+    "custom logging",
+    "indexed",
+    "pretty print"
+  ]
 }
