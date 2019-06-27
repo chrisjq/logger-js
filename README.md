@@ -10,9 +10,9 @@ Parameter {0}, {1}, {2} ... {number} replaced with strings of values of objects 
 
 ## Import default logger:
 
-**import { Log } from "logger-js";** //For constant instance
+**import { Log } from "@chrisq/logger-js";** //For constant instance
 
-**import { Logger } from "logger-js";** //For class
+**import { Logger } from "@chrisq/logger-js";** //For class
 
 ## Logging
 
@@ -35,14 +35,16 @@ Parameter {0}, {1}, {2} ... {number} replaced with strings of values of objects 
 # Functions
 
 ## Configuration
+
 - **Log.setCustomLogger(customFunction)** - Write a function to log the text in a custom way e.g. write to file
 - **Log.setLogLevel(number)** - The maximum log level to output to log
 - **Log.setLoggingEnabled(bool)** - Enable logging
 - **Log.setPrettyJSON(bool)** - Pretty print JSON
-- **Log.setWriteLevel(number)** - Include the write level in output e.g. INFO: 
+- **Log.setWriteLevel(number)** - Include the write level in output e.g. INFO:
 - **Log.setIncludeTimestamp(bool)** - Include timestame in output
 
 ## Instance Logging:
+
 - **Log.functionName(label, instanceEnable, ...oObj)**
 - **Log.iSevere()**
 - **Log.iWarning()**
@@ -54,6 +56,7 @@ Parameter {0}, {1}, {2} ... {number} replaced with strings of values of objects 
 - **Log.iLog()** - Same as iInfo
 
 ## Logging:
+
 - **Log.functionName(label, instanceEnable, ...oObj)**
 - **Log.severe()**
 - **Log.warning()**
@@ -63,4 +66,3 @@ Parameter {0}, {1}, {2} ... {number} replaced with strings of values of objects 
 - **Log.finer()**
 - **Log.finest()**
 - **Log.log()** - Same as info
-
