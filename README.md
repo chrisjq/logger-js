@@ -2,12 +2,12 @@
 Java style logger for node.js
 Parameter {0}, {1} ... replaced with strings of values.
 
-#Usage
+# Usage
 ##Import default logger:
 import { Log } from "logger-js"; //For constant instance
 import { Logger } from "logger-js"; //For class
 
-##Log
+## Log
 
 To log:
 Log.log("{0} componentDidMount - Props: {1}", this.constructor.name, this.props);
@@ -17,12 +17,12 @@ const DEBUG_CLASS = true;
 ...
 Log.iLog("{0} componentDidMount - Props: {1}", DEBUG_CLASS, this.constructor.name, this.props);
 
-##Constant Log Levels
+## Constant Log Levels
 OFF, SEVERE, WARNING, INFO, CONFIG, FINE, FINER, FINEST, ALL
 
-#Functions
+# Functions
 
-##Configuration
+## Configuration
 Log.setCustomLogger(customFunction); //Write a function to log the text in a custom way e.g. write to file
 Log.setLogLevel(number); //The maximum log level to output to log
 Log.setLoggingEnabled(bool); //Enable logging
@@ -30,7 +30,7 @@ Log.setPrettyJSON(bool); //Pretty print JSON
 Log.setWriteLevel(number); //Include the write level in output e.g. INFO: 
 Log.setIncludeTimestamp(bool); //Include timestame in output
 
-##Instance Logging:
+## Instance Logging:
 Log.functionName(label, instanceEnable, ...oObj);
 Log.iSevere()
 Log.iWarning()
@@ -41,7 +41,7 @@ Log.iFiner()
 Log.iFinest()
 Log.iLog() //Same as iInfo
 
-##Logging:
+## Logging:
 Log.functionName(label, instanceEnable, ...oObj);
 Log.severe()
 Log.warning()
