@@ -4,5 +4,6 @@
   "description": "Java style logger",
   "main": "index.js",
   "author": "Chris Quin<chrisq@ingenuity.kiwi>",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": "https://github.com/chrisjq/logger-js.git"
 }
