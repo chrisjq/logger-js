@@ -1,23 +1,33 @@
 # logger-js
+
 Java style logger for node.js
-Parameter {0}, {1} ... replaced with strings of values.
+
+Parameter {0}, {1}, {2} ... {number} replaced with strings of values of objects passed to function.
 
 # Usage
+
 ## Import default logger:
+
 **import { Log } from "logger-js";** //For constant instance
+
 **import { Logger } from "logger-js";** //For class
 
 ## Logging
 
 ### To log
+
 **Log.log("{0} componentDidMount - Props: {1}", this.constructor.name, this.props);**
 
 ### To log in class passing class instance variable
+
 **const DEBUG_CLASS = true;**
+
 ...
+
 **Log.iLog("{0} componentDidMount - Props: {1}", DEBUG_CLASS, this.constructor.name, this.props);**
 
 ## Constant Log Levels
+
 **OFF, SEVERE, WARNING, INFO, CONFIG, FINE, FINER, FINEST, ALL**
 
 # Functions
