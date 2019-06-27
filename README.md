@@ -4,6 +4,8 @@ Java style logger for node.js
 
 Parameter {0}, {1}, {2} ... {number} replaced with strings of values of objects passed to function.
 
+(https://github.com/chrisjq/logger-js.git)
+
 # Usage
 
 ## Import default logger:
