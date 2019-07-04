@@ -1,6 +1,6 @@
 # logger-js
 
-Java style logger for node.js
+Java style logger for node.js/react native
 
 Parameter {0}, {1}, {2} ... {number} replaced with strings of values of objects(JSON output) or variables passed to function.
 
@@ -40,7 +40,7 @@ Parameter {0}, {1}, {2} ... {number} replaced with strings of values of objects(
 - **Log.setLogLevel(number)** - The maximum log level to output to log
 - **Log.setLoggingEnabled(bool)** - Enable logging
 - **Log.setPrettyJSON(bool)** - Pretty print JSON
-- **Log.setWriteLevel(number)** - Include the write level in output e.g. INFO:
+- **Log.setWriteLevel(bool)** - Include the write level in output e.g. INFO:
 - **Log.setIncludeTimestamp(bool)** - Include timestame in output
 
 ## Instance Logging:
@@ -57,7 +57,7 @@ Parameter {0}, {1}, {2} ... {number} replaced with strings of values of objects(
 
 ## Logging:
 
-- **Log.functionName(label, instanceEnable, ...oObj)**
+- **Log.functionName(label, ...oObj)**
 - **Log.severe()**
 - **Log.warning()**
 - **Log.info()**

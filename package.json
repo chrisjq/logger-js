@@ -1,6 +1,6 @@
 {
   "name": "@chrisq/logger-js",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Java style logger",
   "main": "index.js",
   "author": "Chris Quin<chrisq@ingenuity.kiwi>",
@@ -17,6 +17,19 @@
     "console",
     "custom logging",
     "indexed",
-    "pretty print"
-  ]
+    "pretty print",
+    "react native logging"
+  ],
+  "scripts": {
+    "test": "jest test/test.js"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/plugin-proposal-class-properties": "^7.4.4",
+    "@babel/preset-env": "^7.4.5",
+    "@babel/preset-typescript": "^7.3.3",
+    "babel-jest": "^24.8.0",
+    "jest": "^24.8.0"
+  }
 }

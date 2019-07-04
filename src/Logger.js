@@ -139,8 +139,8 @@ class Logger {
     this.prettyJSON = bool;
   };
 
-  setWriteLevel = number => {
-    this.writeLevel = number;
+  setWriteLevel = bool => {
+    this.writeLevel = bool;
   };
 
   setIncludeTimestamp = bool => {
