@@ -1,6 +1,6 @@
 # logger-js
 
-Java style logger for node.js/react native
+Java style logger for es6/node.js/react native
 
 Parameter {0}, {1}, {2} ... {number} replaced with strings of values of objects(JSON output) or variables passed to function.
 
