@@ -587,3 +587,58 @@ test("Check log level info", () => {
   expect(gotResult1).toBe(testResult1);
   expect(gotResult2).toBe(testResult2);
 });
+
+test("Check no objects passed log INFO", () => {
+  const testResult = "INFO: This is some test JSON";
+  var gotResult = null;
+
+  const customerTestLogger = text => {
+    gotResult = text;
+
+    console.log(text);
+  };
+
+  //Setup
+  Log.setIncludeTimestamp(false);
+  Log.setCustomLogger(customerTestLogger);
+
+  //Test
+  Log.log("This is some test JSON");
+
+  expect(gotResult).toBe(testResult);
+});
+
+test("Check cyclic JSON", () => {
+  const testObject = {
+    name: "World",
+    regions: []
+  };
+
+  testObject.regions.push({
+    name: "North America",
+    parent: "America"
+  });
+
+  testObject.regions.push({
+    name: "Asia",
+    parent: testObject
+  });
+
+  const testResult = "Error Occurred";
+  var gotResult = null;
+
+  const customerTestLogger = text => {
+    gotResult = text.includes(testResult);
+
+    console.log(text);
+  };
+
+  //Setup
+  Log.setIncludeTimestamp(false);
+  Log.setCustomLogger(customerTestLogger);
+
+  //Test
+  Log.log("This is some test JSON [{0}]", testObject);
+
+  expect(gotResult).toBe(true);
+});

@@ -157,19 +157,41 @@ class Logger {
 
       if (label) {
         logText = label;
-        let i = 0;
-        for (let val of oObj) {
-          let replaceS = "{" + i + "}";
 
-          if (val !== Object(val)) {
-            logText = logText.replace(replaceS, val);
-          } else if (this.prettyJSON) {
-            logText = logText.replace(replaceS, JSON.stringify(val, null, 2));
-          } else {
-            logText = logText.replace(replaceS, JSON.stringify(val));
+        if (oObj) {
+          let i = 0;
+          for (let val of oObj) {
+            let replaceS = "{" + i + "}";
+
+            let replaceW = "";
+            if (val !== Object(val)) {
+              replaceW = val;
+            } else if (this.prettyJSON) {
+              try {
+                replaceW = JSON.stringify(val, null, 2);
+              } catch (e) {
+                replaceW =
+                  'Error Occurred "' +
+                  e.message +
+                  '" Object Key Set: ' +
+                  Object.keys(val);
+              }
+            } else {
+              try {
+                replaceW = JSON.stringify(val);
+              } catch (e) {
+                replaceW =
+                  'Eerror Occurred "' +
+                  e.message +
+                  '" Object Key Set: ' +
+                  Object.keys(val);
+              }
+            }
+
+            logText = logText.replace(replaceS, replaceW);
+
+            i++;
           }
-
-          i++;
         }
 
         if (this.writeLevel) {
