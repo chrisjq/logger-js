@@ -617,7 +617,9 @@ test("Check cyclic JSON - traverse disabled.", () => {
 
   const customerTestLogger = (text) => {
     gotResult = text.includes(testResult);
-
+    return {
+      isSeenNode: true,
+    };
     console.log(text);
   };
 

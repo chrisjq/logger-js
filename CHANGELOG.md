@@ -1,3 +1,7 @@
+# 1.0.14 / 2019-07-06
+
+- Fixed manual cyclic checks so it doesn't alter the original object at the expense of iterating all seen object for reference checks.
+
 # 1.0.13 / 2019-07-06
 
 - Fixed documentation.

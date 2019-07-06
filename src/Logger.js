@@ -189,170 +189,102 @@ class Logger {
       newObject = {};
     }
 
-    let error = null;
+    this.putSeenNode(seenNodes, "root", object, newObject);
+    this.processObject(seenNodes, 0, "root", "root", object, newObject);
 
-    try {
-      this.putSeenNode(seenNodes, object, "root");
-      this.processObject(seenNodes, 0, "root", "root", object, newObject);
-    } catch (e) {
-      error = e;
-    }
-
-    for (let i = 0; i < seenNodes.length; i++) {
-      let current = seenNodes[i];
-      let parentNode = current.parentNode;
-      let cA = Array.isArray(parentNode);
-
-      if (cA) {
-        delete parentNode[0];
-      } else {
-        delete parentNode["_seenNode"];
-      }
-    }
-
-    if (error) {
-      throw error;
-    }
-
-    try {
-      return pretty ? JSON.stringify(newObject, null, 2) : JSON.stringify(newObject);
-    } catch (e) {
-      return 'Error Occurred "' + e.message + '" Object Key Set: ' + Object.keys(newObject);
-    }
+    return pretty ? JSON.stringify(newObject, null, 2) : JSON.stringify(newObject);
   };
 
   processObject = (seenNodes, depth, currentNodePath, currentNodeName, origObj, newObj) => {
     //Go through all the objects
     if (Array.isArray(origObj)) {
-      let currentIndex = 0;
-
       for (let i = 0; i < origObj.length; i++) {
         let cVal = origObj[i];
 
-        let seenNode = this.getSeenNode(cVal);
-        let hasSeenNode = seenNode ? true : false;
-        let isSeenNode = seenNode && seenNode.isSeenNode ? true : false;
-
-        if (!hasSeenNode) {
-          if (cVal !== Object(cVal)) {
-            newObj[currentIndex] = cVal;
-            currentIndex++;
-          } else if (Array.isArray(cVal)) {
-            if (!isSeenNode) {
-              let newArray = [];
-              newObj[currentIndex] = newArray;
-              let cName = "" + (currentIndex + 1);
-              let cPath = currentNodePath + "." + cName;
-              this.putSeenNode(seenNodes, cVal, cPath);
-              this.processObject(seenNodes, depth + 1, cPath, cName, cVal, newArray);
-            } else {
-              newObj[currentIndex] = "REFERENCES => " + seenNode.path;
-            }
-            currentIndex++;
-          } else {
-            if (!isSeenNode) {
-              let newObject = {};
-              newObj[currentIndex] = newObject;
-              let cName = "" + (currentIndex + 1);
-              let cPath = currentNodePath + "." + cName;
-              this.putSeenNode(seenNodes, cVal, cPath);
-              this.processObject(seenNodes, depth + 1, cPath, cName, cVal, newObject);
-            } else {
-              newObj[currentIndex] = "REFERENCES => " + seenNode.path;
-            }
-            currentIndex++;
-          }
+        if (cVal !== Object(cVal)) {
+          newObj[i] = cVal;
         } else {
-          if (!isSeenNode) {
-            newObj[currentIndex] = "REFERENCES => " + seenNode.path;
-            currentIndex++;
+          let seenNode = this.getSeenNode(seenNodes, cVal);
+
+          if (seenNode) {
+            if (Array.isArray(cVal)) {
+              newObj[i] = "REFERENCES => " + seenNode.path;
+            } else {
+              newObj[i] = "REFERENCES => " + seenNode.path;
+            }
+          } else {
+            if (Array.isArray(cVal)) {
+              let newArray = [];
+              newObj[i] = newArray;
+              let cPath = currentNodePath + "." + i;
+              this.putSeenNode(seenNodes, cPath, cVal, newArray);
+              this.processObject(seenNodes, depth + 1, cPath, i, cVal, newArray);
+            } else {
+              let newObject = {};
+              newObj[i] = newObject;
+              let cPath = currentNodePath + "." + i;
+              this.putSeenNode(seenNodes, cPath, cVal, newObject);
+              this.processObject(seenNodes, depth + 1, cPath, i, cVal, newObject);
+            }
           }
         }
       }
     } else {
-      let keyS = Object.keys(origObj);
-
-      for (let i = 0; i < keyS.length; i++) {
-        let cKey = keyS[i];
+      let keySet = Object.keys(origObj);
+      for (let i = 0; i < keySet.length; i++) {
+        let cKey = keySet[i];
         let cVal = origObj[cKey];
-        let seenNode = this.getSeenNode(cVal);
-        let hasSeenNode = seenNode ? true : false;
-        let isSeenNode = seenNode && seenNode.isSeenNode ? true : false;
 
-        if (!hasSeenNode) {
-          if (cVal !== Object(cVal)) {
-            newObj[cKey] = cVal;
-          } else if (Array.isArray(cVal)) {
-            if (!isSeenNode) {
+        if (cVal !== Object(cVal)) {
+          newObj[cKey] = cVal;
+        } else {
+          let seenNode = this.getSeenNode(seenNodes, cVal);
+
+          if (seenNode) {
+            if (Array.isArray(cVal)) {
+              newObj[cKey] = "REFERENCES => " + seenNode.path;
+            } else {
+              newObj[cKey] = "REFERENCES => " + seenNode.path;
+            }
+          } else {
+            if (Array.isArray(cVal)) {
               let newArray = [];
               newObj[cKey] = newArray;
               let cPath = currentNodePath + "." + cKey;
-              this.putSeenNode(seenNodes, cVal, cPath);
+              this.putSeenNode(seenNodes, cPath, cVal, newArray);
               this.processObject(seenNodes, depth + 1, cPath, cKey, cVal, newArray);
             } else {
-              newObj[cKey] = "REFERENCES => " + seenNode.path;
-            }
-          } else {
-            if (!isSeenNode) {
               let newObject = {};
-              newObj[cKey] = newObject;
+              newObj[i] = newObject;
               let cPath = currentNodePath + "." + cKey;
-              this.putSeenNode(seenNodes, cVal, cPath);
+              this.putSeenNode(seenNodes, cPath, cVal, newObject);
               this.processObject(seenNodes, depth + 1, cPath, cKey, cVal, newObject);
-            } else {
-              newObj[cKey] = "REFERENCES => " + seenNode.path;
             }
           }
-        } else {
-          if (!isSeenNode) {
-            newObj[cKey] = "REFERENCES => " + seenNode.path;
-          }
         }
       }
     }
   };
 
-  getSeenNode = (obj) => {
-    if (Array.isArray(obj)) {
-      let ret = null;
+  getSeenNode = (seenNodes, obj) => {
+    for (let i = 0; i < seenNodes.length; i++) {
+      let cSeen = seenNodes[i];
 
-      if (obj.length > 0) {
-        let cO = obj[0];
-
-        if (cO == Object(cO)) {
-          if (cO._hasSeenNode) {
-            return cO;
-          }
-        }
+      if (obj === cSeen.originalNode) {
+        return cSeen;
       }
-    } else {
-      if (obj._hasSeenNode) {
-        return {
-          isSeenNode: true,
-        };
-      }
-      return obj["_seenNode"];
     }
+
+    return null;
   };
 
-  putSeenNode(seenNodes, obj, path) {
-    if (Object.isFrozen(obj) || Object.isSealed(obj) || Object.isExtensible()) {
-      throw { message: "Object at " + path + " read only." };
-    }
-
+  putSeenNode(seenNodes, path, originalObject, newObject) {
     let cSeenObj = {
-      _hasSeenNode: true,
       path: path,
-      parentNode: obj,
+      originalNode: originalObject,
     };
 
     seenNodes.push(cSeenObj);
-
-    if (Array.isArray(obj)) {
-      obj.splice(0, 0, cSeenObj);
-    } else {
-      obj._seenNode = cSeenObj;
-    }
   }
 
   logInternal = (level, label, instanceEnable, ...oObj) => {
