@@ -1,6 +1,6 @@
 {
   "name": "@chrisq/logger-js",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Java style logger",
   "main": "index.js",
   "author": "Chris Quin<chrisq@ingenuity.kiwi>",
@@ -31,5 +31,14 @@
     "@babel/preset-typescript": "^7.3.3",
     "babel-jest": "^24.8.0",
     "jest": "^24.8.0"
+  },
+  "prettier": {
+    "trailingComma": "all",
+    "tabWidth": 2,
+    "semi": true,
+    "singleQuote": false,
+    "bracketSpacing": true,
+    "printWidth": 160,
+    "arrowParens": "always"
   }
 }

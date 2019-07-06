@@ -53,6 +53,7 @@ class Logger {
     this.prettyJSON = true;
     this.writeLevel = true;
     this.includeTimestamp = true;
+    this.traverseCyclicJSON = true;
   }
 
   //Instance logging, to enable or disable at the instace level
@@ -123,36 +124,212 @@ class Logger {
     this.logInternal(INFO, label, true, ...oObj);
   };
 
-  setCustomLogger = customWriter => {
+  setCustomLogger = (customWriter) => {
     this.customWriter = customWriter;
   };
 
-  setLogLevel = number => {
+  setLogLevel = (number) => {
     this.logLevel = number;
   };
 
-  setLoggingEnabled = bool => {
+  setLoggingEnabled = (bool) => {
     this.loggingEnabled = bool;
   };
 
-  setPrettyJSON = bool => {
+  setPrettyJSON = (bool) => {
     this.prettyJSON = bool;
   };
 
-  setWriteLevel = bool => {
+  setWriteLevel = (bool) => {
     this.writeLevel = bool;
   };
 
-  setIncludeTimestamp = bool => {
+  setIncludeTimestamp = (bool) => {
     this.includeTimestamp = bool;
   };
 
+  setTraverseCyclicJSON = (bool) => {
+    this.traverseCyclicJSON = bool;
+  };
+
+  getJSONString = (pretty, val) => {
+    try {
+      return pretty ? JSON.stringify(val, null, 2) : JSON.stringify(val);
+    } catch (e) {
+      if (!this.traverseCyclicJSON) {
+        return 'Error Occurred "' + e.message + '" Object Key Set: ' + Object.keys(val);
+      } else {
+        return this.getCyclicJSONString(pretty, val);
+      }
+    }
+  };
+
+  getCyclicJSONString = (pretty, object) => {
+    let seenNodes = [];
+
+    let isArray = Array.isArray(object);
+    let newObject = null;
+
+    if (isArray) {
+      newObject = [];
+    } else {
+      newObject = {};
+    }
+
+    this.putSeenNode(seenNodes, object, "root");
+    this.processObject(seenNodes, 0, "root", "root", object, newObject);
+
+    for (let i = 0; i < seenNodes.length; i++) {
+      let current = seenNodes[i];
+      let parentNode = current.parentNode;
+      let cA = Array.isArray(parentNode);
+
+      if (cA) {
+        delete parentNode[0];
+      } else {
+        delete parentNode["_seenNode"];
+      }
+    }
+
+    try {
+      return pretty ? JSON.stringify(newObject, null, 2) : JSON.stringify(newObject);
+    } catch (e) {
+      return 'Error Occurred "' + e.message + '" Object Key Set: ' + Object.keys(newObject);
+    }
+  };
+
+  processObject = (seenNodes, depth, currentNodePath, currentNodeName, origObj, newObj) => {
+    //Go through all the objects
+    if (Array.isArray(origObj)) {
+      let currentIndex = 0;
+
+      for (let i = 0; i < origObj.length; i++) {
+        let cVal = origObj[i];
+
+        let seenNode = this.getSeenNode(cVal);
+        let hasSeenNode = seenNode ? true : false;
+        let isSeenNode = seenNode && seenNode.isSeenNode ? true : false;
+
+        if (!hasSeenNode) {
+          if (cVal !== Object(cVal)) {
+            newObj[currentIndex] = cVal;
+            currentIndex++;
+          } else if (Array.isArray(cVal)) {
+            if (!isSeenNode) {
+              let newArray = [];
+              newObj[currentIndex] = newArray;
+              let cName = "" + (currentIndex + 1);
+              let cPath = currentNodePath + "." + cName;
+              this.putSeenNode(seenNodes, cVal, cPath);
+              this.processObject(seenNodes, depth + 1, cPath, cName, cVal, newArray);
+            } else {
+              newObj[currentIndex] = "REFERENCES => " + seenNode.path;
+            }
+            currentIndex++;
+          } else {
+            if (!isSeenNode) {
+              let newObject = {};
+              newObj[currentIndex] = newObject;
+              let cName = "" + (currentIndex + 1);
+              let cPath = currentNodePath + "." + cName;
+              this.putSeenNode(seenNodes, cVal, cPath);
+              this.processObject(seenNodes, depth + 1, cPath, cName, cVal, newObject);
+            } else {
+              newObj[currentIndex] = "REFERENCES => " + seenNode.path;
+            }
+            currentIndex++;
+          }
+        } else {
+          if (!isSeenNode) {
+            newObj[currentIndex] = "REFERENCES => " + seenNode.path;
+            currentIndex++;
+          }
+        }
+      }
+    } else {
+      let keyS = Object.keys(origObj);
+
+      for (let i = 0; i < keyS.length; i++) {
+        let cKey = keyS[i];
+        let cVal = origObj[cKey];
+        let seenNode = this.getSeenNode(cVal);
+        let hasSeenNode = seenNode ? true : false;
+        let isSeenNode = seenNode && seenNode.isSeenNode ? true : false;
+
+        if (!hasSeenNode) {
+          if (cVal !== Object(cVal)) {
+            newObj[cKey] = cVal;
+          } else if (Array.isArray(cVal)) {
+            if (!isSeenNode) {
+              let newArray = [];
+              newObj[cKey] = newArray;
+              let cPath = currentNodePath + "." + cKey;
+              this.putSeenNode(seenNodes, cVal, cPath);
+              this.processObject(seenNodes, depth + 1, cPath, cKey, cVal, newArray);
+            } else {
+              newObj[cKey] = "REFERENCES => " + seenNode.path;
+            }
+          } else {
+            if (!isSeenNode) {
+              let newObject = {};
+              newObj[cKey] = newObject;
+              let cPath = currentNodePath + "." + cKey;
+              this.putSeenNode(seenNodes, cVal, cPath);
+              this.processObject(seenNodes, depth + 1, cPath, cKey, cVal, newObject);
+            } else {
+              newObj[cKey] = "REFERENCES => " + seenNode.path;
+            }
+          }
+        } else {
+          if (!isSeenNode) {
+            newObj[cKey] = "REFERENCES => " + seenNode.path;
+          }
+        }
+      }
+    }
+  };
+
+  getSeenNode = (obj) => {
+    if (Array.isArray(obj)) {
+      let ret = null;
+
+      if (obj.length > 0) {
+        let cO = obj[0];
+
+        if (cO == Object(cO)) {
+          if (cO._hasSeenNode) {
+            return cO;
+          }
+        }
+      }
+    } else {
+      if (obj._hasSeenNode) {
+        return {
+          isSeenNode: true,
+        };
+      }
+      return obj["_seenNode"];
+    }
+  };
+
+  putSeenNode(seenNodes, obj, path) {
+    let cSeenObj = {
+      _hasSeenNode: true,
+      path: path,
+      parentNode: obj,
+    };
+
+    seenNodes.push(cSeenObj);
+
+    if (Array.isArray(obj)) {
+      obj.splice(0, 0, cSeenObj);
+    } else {
+      obj._seenNode = cSeenObj;
+    }
+  }
+
   logInternal = (level, label, instanceEnable, ...oObj) => {
-    if (
-      this.loggingEnabled && level >= this.logLevel && instanceEnable
-        ? instanceEnable
-        : false
-    ) {
+    if (this.loggingEnabled && level >= this.logLevel && instanceEnable ? instanceEnable : false) {
       let logText = null;
 
       if (label) {
@@ -166,26 +343,8 @@ class Logger {
             let replaceW = "";
             if (val !== Object(val)) {
               replaceW = val;
-            } else if (this.prettyJSON) {
-              try {
-                replaceW = JSON.stringify(val, null, 2);
-              } catch (e) {
-                replaceW =
-                  'Error Occurred "' +
-                  e.message +
-                  '" Object Key Set: ' +
-                  Object.keys(val);
-              }
             } else {
-              try {
-                replaceW = JSON.stringify(val);
-              } catch (e) {
-                replaceW =
-                  'Eerror Occurred "' +
-                  e.message +
-                  '" Object Key Set: ' +
-                  Object.keys(val);
-              }
+              replaceW = this.getJSONString(this.prettyJSON, val);
             }
 
             logText = logText.replace(replaceS, replaceW);

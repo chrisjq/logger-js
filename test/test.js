@@ -1,28 +1,18 @@
 "use strict";
 
 import { Log } from "../index.js";
-import {
-  OFF,
-  SEVERE,
-  WARNING,
-  INFO,
-  CONFIG,
-  FINE,
-  FINER,
-  FINEST,
-  ALL
-} from "../src/Logger.js";
+import { OFF, SEVERE, WARNING, INFO, CONFIG, FINE, FINER, FINEST, ALL } from "../src/Logger.js";
 
 //Standard methods
 test("Check basic log INFO", () => {
   const testJSON = {
-    Test: "Testing"
+    Test: "Testing",
   };
 
   const testResult = 'INFO: This is some test JSON {\n  "Test": "Testing"\n}';
   var gotResult = null;
 
-  const customerTestLogger = text => {
+  const customerTestLogger = (text) => {
     gotResult = text;
 
     console.log(text);
@@ -40,13 +30,13 @@ test("Check basic log INFO", () => {
 
 test("Check basic log SEVERE", () => {
   const testJSON = {
-    Test: "Testing"
+    Test: "Testing",
   };
 
   const testResult = 'SEVERE: This is some test JSON {\n  "Test": "Testing"\n}';
   var gotResult = null;
 
-  const customerTestLogger = text => {
+  const customerTestLogger = (text) => {
     gotResult = text;
 
     console.log(text);
@@ -64,14 +54,13 @@ test("Check basic log SEVERE", () => {
 
 test("Check basic log WARNING", () => {
   const testJSON = {
-    Test: "Testing"
+    Test: "Testing",
   };
 
-  const testResult =
-    'WARNING: This is some test JSON {\n  "Test": "Testing"\n}';
+  const testResult = 'WARNING: This is some test JSON {\n  "Test": "Testing"\n}';
   var gotResult = null;
 
-  const customerTestLogger = text => {
+  const customerTestLogger = (text) => {
     gotResult = text;
 
     console.log(text);
@@ -89,13 +78,13 @@ test("Check basic log WARNING", () => {
 
 test("Check basic log INFO", () => {
   const testJSON = {
-    Test: "Testing"
+    Test: "Testing",
   };
 
   const testResult = 'INFO: This is some test JSON {\n  "Test": "Testing"\n}';
   var gotResult = null;
 
-  const customerTestLogger = text => {
+  const customerTestLogger = (text) => {
     gotResult = text;
 
     console.log(text);
@@ -113,13 +102,13 @@ test("Check basic log INFO", () => {
 
 test("Check basic log CONFIG", () => {
   const testJSON = {
-    Test: "Testing"
+    Test: "Testing",
   };
 
   const testResult = 'CONFIG: This is some test JSON {\n  "Test": "Testing"\n}';
   var gotResult = null;
 
-  const customerTestLogger = text => {
+  const customerTestLogger = (text) => {
     gotResult = text;
 
     console.log(text);
@@ -137,13 +126,13 @@ test("Check basic log CONFIG", () => {
 
 test("Check basic log FINE", () => {
   const testJSON = {
-    Test: "Testing"
+    Test: "Testing",
   };
 
   const testResult = 'FINE: This is some test JSON {\n  "Test": "Testing"\n}';
   var gotResult = null;
 
-  const customerTestLogger = text => {
+  const customerTestLogger = (text) => {
     gotResult = text;
 
     console.log(text);
@@ -161,13 +150,13 @@ test("Check basic log FINE", () => {
 
 test("Check basic log FINER", () => {
   const testJSON = {
-    Test: "Testing"
+    Test: "Testing",
   };
 
   const testResult = 'FINER: This is some test JSON {\n  "Test": "Testing"\n}';
   var gotResult = null;
 
-  const customerTestLogger = text => {
+  const customerTestLogger = (text) => {
     gotResult = text;
 
     console.log(text);
@@ -185,13 +174,13 @@ test("Check basic log FINER", () => {
 
 test("Check basic log FINEST", () => {
   const testJSON = {
-    Test: "Testing"
+    Test: "Testing",
   };
 
   const testResult = 'FINEST: This is some test JSON {\n  "Test": "Testing"\n}';
   var gotResult = null;
 
-  const customerTestLogger = text => {
+  const customerTestLogger = (text) => {
     gotResult = text;
 
     console.log(text);
@@ -211,13 +200,13 @@ test("Check basic log FINEST", () => {
 test("Check instance log INFO", () => {
   const DEBUG = true;
   const testJSON = {
-    Test: "Testing"
+    Test: "Testing",
   };
 
   const testResult = 'INFO: This is some test JSON {\n  "Test": "Testing"\n}';
   var gotResult = null;
 
-  const customerTestLogger = text => {
+  const customerTestLogger = (text) => {
     gotResult = text;
 
     console.log(text);
@@ -236,13 +225,13 @@ test("Check instance log INFO", () => {
 test("Check instance log SEVERE", () => {
   const DEBUG = true;
   const testJSON = {
-    Test: "Testing"
+    Test: "Testing",
   };
 
   const testResult = 'SEVERE: This is some test JSON {\n  "Test": "Testing"\n}';
   var gotResult = null;
 
-  const customerTestLogger = text => {
+  const customerTestLogger = (text) => {
     gotResult = text;
 
     console.log(text);
@@ -261,14 +250,13 @@ test("Check instance log SEVERE", () => {
 test("Check instance log WARNING", () => {
   const DEBUG = true;
   const testJSON = {
-    Test: "Testing"
+    Test: "Testing",
   };
 
-  const testResult =
-    'WARNING: This is some test JSON {\n  "Test": "Testing"\n}';
+  const testResult = 'WARNING: This is some test JSON {\n  "Test": "Testing"\n}';
   var gotResult = null;
 
-  const customerTestLogger = text => {
+  const customerTestLogger = (text) => {
     gotResult = text;
 
     console.log(text);
@@ -287,13 +275,13 @@ test("Check instance log WARNING", () => {
 test("Check instance log INFO", () => {
   const DEBUG = true;
   const testJSON = {
-    Test: "Testing"
+    Test: "Testing",
   };
 
   const testResult = 'INFO: This is some test JSON {\n  "Test": "Testing"\n}';
   var gotResult = null;
 
-  const customerTestLogger = text => {
+  const customerTestLogger = (text) => {
     gotResult = text;
 
     console.log(text);
@@ -312,13 +300,13 @@ test("Check instance log INFO", () => {
 test("Check instance log CONFIG", () => {
   const DEBUG = true;
   const testJSON = {
-    Test: "Testing"
+    Test: "Testing",
   };
 
   const testResult = 'CONFIG: This is some test JSON {\n  "Test": "Testing"\n}';
   var gotResult = null;
 
-  const customerTestLogger = text => {
+  const customerTestLogger = (text) => {
     gotResult = text;
 
     console.log(text);
@@ -337,13 +325,13 @@ test("Check instance log CONFIG", () => {
 test("Check instance log FINE", () => {
   const DEBUG = true;
   const testJSON = {
-    Test: "Testing"
+    Test: "Testing",
   };
 
   const testResult = 'FINE: This is some test JSON {\n  "Test": "Testing"\n}';
   var gotResult = null;
 
-  const customerTestLogger = text => {
+  const customerTestLogger = (text) => {
     gotResult = text;
 
     console.log(text);
@@ -362,13 +350,13 @@ test("Check instance log FINE", () => {
 test("Check instance log FINER", () => {
   const DEBUG = true;
   const testJSON = {
-    Test: "Testing"
+    Test: "Testing",
   };
 
   const testResult = 'FINER: This is some test JSON {\n  "Test": "Testing"\n}';
   var gotResult = null;
 
-  const customerTestLogger = text => {
+  const customerTestLogger = (text) => {
     gotResult = text;
 
     console.log(text);
@@ -387,13 +375,13 @@ test("Check instance log FINER", () => {
 test("Check instance log FINEST", () => {
   const DEBUG = true;
   const testJSON = {
-    Test: "Testing"
+    Test: "Testing",
   };
 
   const testResult = 'FINEST: This is some test JSON {\n  "Test": "Testing"\n}';
   var gotResult = null;
 
-  const customerTestLogger = text => {
+  const customerTestLogger = (text) => {
     gotResult = text;
 
     console.log(text);
@@ -416,7 +404,7 @@ test("Check varable", () => {
   const testResult = "INFO: This is some test JSON true";
   var gotResult = null;
 
-  const customerTestLogger = text => {
+  const customerTestLogger = (text) => {
     gotResult = text;
 
     console.log(text);
@@ -438,7 +426,7 @@ test("Check not whiting log level", () => {
   const testResult = "This is some test JSON true";
   var gotResult = null;
 
-  const customerTestLogger = text => {
+  const customerTestLogger = (text) => {
     gotResult = text;
 
     console.log(text);
@@ -462,7 +450,7 @@ test("Check logging disabled", () => {
   const testResult = null;
   var gotResult = null;
 
-  const customerTestLogger = text => {
+  const customerTestLogger = (text) => {
     gotResult = text;
 
     console.log(text);
@@ -483,13 +471,13 @@ test("Check logging disabled", () => {
 
 test("Check non-pretty json", () => {
   const testJSON = {
-    Test: "Testing"
+    Test: "Testing",
   };
 
   const testResult = 'INFO: This is some test JSON {"Test":"Testing"}';
   var gotResult = null;
 
-  const customerTestLogger = text => {
+  const customerTestLogger = (text) => {
     gotResult = text;
 
     console.log(text);
@@ -510,7 +498,7 @@ test("Check non-pretty json", () => {
 
 test("Check log level fine", () => {
   const testJSON = {
-    Test: "Testing"
+    Test: "Testing",
   };
 
   const testResult1 = 'INFO: This is some test JSON {"Test":"Testing"}';
@@ -518,13 +506,13 @@ test("Check log level fine", () => {
   var gotResult1 = null;
   var gotResult2 = null;
 
-  const customerTestLogger1 = text => {
+  const customerTestLogger1 = (text) => {
     gotResult1 = text;
 
     console.log(text);
   };
 
-  const customerTestLogger2 = text => {
+  const customerTestLogger2 = (text) => {
     gotResult2 = text;
 
     console.log(text);
@@ -550,7 +538,7 @@ test("Check log level fine", () => {
 
 test("Check log level info", () => {
   const testJSON = {
-    Test: "Testing"
+    Test: "Testing",
   };
 
   const testResult1 = 'INFO: This is some test JSON {"Test":"Testing"}';
@@ -558,13 +546,13 @@ test("Check log level info", () => {
   var gotResult1 = null;
   var gotResult2 = null;
 
-  const customerTestLogger1 = text => {
+  const customerTestLogger1 = (text) => {
     gotResult1 = text;
 
     console.log(text);
   };
 
-  const customerTestLogger2 = text => {
+  const customerTestLogger2 = (text) => {
     gotResult2 = text;
 
     console.log(text);
@@ -592,7 +580,7 @@ test("Check no objects passed log INFO", () => {
   const testResult = "INFO: This is some test JSON";
   var gotResult = null;
 
-  const customerTestLogger = text => {
+  const customerTestLogger = (text) => {
     gotResult = text;
 
     console.log(text);
@@ -608,37 +596,164 @@ test("Check no objects passed log INFO", () => {
   expect(gotResult).toBe(testResult);
 });
 
-test("Check cyclic JSON", () => {
+test("Check cyclic JSON - traverse disabled.", () => {
   const testObject = {
     name: "World",
-    regions: []
+    regions: [],
   };
 
   testObject.regions.push({
     name: "North America",
-    parent: "America"
+    parent: "America",
   });
 
   testObject.regions.push({
     name: "Asia",
-    parent: testObject
+    parent: testObject,
   });
 
   const testResult = "Error Occurred";
   var gotResult = null;
 
-  const customerTestLogger = text => {
+  const customerTestLogger = (text) => {
     gotResult = text.includes(testResult);
 
     console.log(text);
   };
 
   //Setup
+  Log.setTraverseCyclicJSON(false);
   Log.setIncludeTimestamp(false);
   Log.setCustomLogger(customerTestLogger);
 
   //Test
   Log.log("This is some test JSON [{0}]", testObject);
+  Log.setTraverseCyclicJSON(true);
 
   expect(gotResult).toBe(true);
+});
+
+test("Check cyclic JSON - traverse enabled", () => {
+  const testObject = {
+    name: "World",
+    regions: [],
+  };
+
+  testObject.regions.push({
+    name: "North America",
+    parent: "America",
+  });
+
+  testObject.regions.push({
+    name: "Asia",
+    parent: testObject,
+  });
+
+  const testResult =
+    'INFO: This is some test JSON [{"name":"World","regions":[{"name":"North America","parent":"America"},{"name":"Asia","parent":"REFERENCES => root"}]}]';
+  var gotResult = null;
+
+  const customerTestLogger = (text) => {
+    gotResult = text;
+
+    console.log(text);
+  };
+
+  //Setup
+  Log.setIncludeTimestamp(false);
+  Log.setPrettyJSON(false);
+  Log.setCustomLogger(customerTestLogger);
+
+  //Test
+  Log.log("This is some test JSON [{0}]", testObject);
+  Log.setPrettyJSON(true);
+
+  expect(gotResult).toBe(testResult);
+});
+
+test("Check cyclic JSON - traverse enabled - original intact", () => {
+  const testObject = {
+    name: "World",
+    regions: [],
+  };
+
+  testObject.regions.push({
+    name: "North America",
+    parent: "America",
+  });
+
+  testObject.regions.push({
+    name: "Asia",
+    parent: testObject,
+  });
+
+  const testResult =
+    'INFO: This is some test JSON [{"name":"World","regions":[{"name":"North America","parent":"America"},{"name":"Asia","parent":"REFERENCES => root"}]}]';
+  var gotResult = null;
+
+  const customerTestLogger = (text) => {
+    gotResult = text;
+
+    console.log(text);
+  };
+
+  //Setup
+  Log.setIncludeTimestamp(false);
+  Log.setPrettyJSON(false);
+  Log.setCustomLogger(customerTestLogger);
+
+  //Test
+  Log.log("This is some test JSON [{0}]", testObject);
+
+  expect(gotResult).toBe(testResult);
+
+  Log.log("Original Keys Are [{0}]", Object.keys(testObject));
+
+  Log.setPrettyJSON(true);
+
+  const keyTestResult = 'INFO: Original Keys Are [["name","regions"]]';
+  expect(gotResult).toBe(keyTestResult);
+});
+
+test("Check cyclic JSON - traverse enabled multiple references", () => {
+  const testObject = {
+    name: "World",
+    regions: [],
+  };
+
+  testObject.regions.push({
+    name: "North America",
+    parent: "America",
+  });
+
+  testObject.regions.push({
+    name: "Asia - References Root",
+    parent: testObject,
+  });
+
+  testObject.regions.push({
+    name: "More Regions - root.regions.array",
+    parent: testObject.regions,
+  });
+
+  const testResult =
+    'INFO: This is some test JSON [{"name":"World","regions":[{"name":"North America","parent":"America"},{"name":"Asia - References Root","parent":"REFERENCES => root"},{"name":"More Regions - root.regions.array","parent":"REFERENCES => root.regions"}]}]';
+  var gotResult = null;
+
+  const customerTestLogger = (text) => {
+    gotResult = text;
+
+    console.log(text);
+  };
+
+  //Setup
+  Log.setIncludeTimestamp(false);
+  Log.setPrettyJSON(false);
+  Log.setCustomLogger(customerTestLogger);
+
+  //Test
+  Log.log("This is some test JSON [{0}]", testObject);
+  Log.setPrettyJSON(true);
+
+  expect(gotResult).toBe(testResult);
 });
