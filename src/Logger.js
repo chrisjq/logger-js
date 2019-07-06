@@ -189,8 +189,14 @@ class Logger {
       newObject = {};
     }
 
-    this.putSeenNode(seenNodes, object, "root");
-    this.processObject(seenNodes, 0, "root", "root", object, newObject);
+    let error = null;
+
+    try {
+      this.putSeenNode(seenNodes, object, "root");
+      this.processObject(seenNodes, 0, "root", "root", object, newObject);
+    } catch (e) {
+      error = e;
+    }
 
     for (let i = 0; i < seenNodes.length; i++) {
       let current = seenNodes[i];
@@ -202,6 +208,10 @@ class Logger {
       } else {
         delete parentNode["_seenNode"];
       }
+    }
+
+    if (error) {
+      throw error;
     }
 
     try {
@@ -326,8 +336,8 @@ class Logger {
   };
 
   putSeenNode(seenNodes, obj, path) {
-    if (Object.isFrozen(obj) || Object.isSealed(obj)) {
-      throw { message: "Object at " + path + " frozen or sealed." };
+    if (Object.isFrozen(obj) || Object.isSealed(obj) || Object.isExtensible()) {
+      throw { message: "Object at " + path + " read only." };
     }
 
     let cSeenObj = {
