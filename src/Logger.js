@@ -54,6 +54,7 @@ class Logger {
     this.writeLevel = true;
     this.includeTimestamp = true;
     this.traverseCyclicJSON = true;
+    this.splitLogCharSize = null;
   }
 
   //Instance logging, to enable or disable at the instace level
@@ -150,6 +151,10 @@ class Logger {
 
   setTraverseCyclicJSON = (bool) => {
     this.traverseCyclicJSON = bool;
+  };
+
+  setSplitLogCharSize = (number) => {
+    this.splitLogCharSize = number;
   };
 
   getJSONString = (pretty, val) => {
@@ -362,10 +367,38 @@ class Logger {
         }
 
         if (logText) {
-          if (this.customWriter) {
-            this.customWriter(logText);
+          if (this.splitLogCharSize && logText.length > this.splitLogCharSize) {
+            let charsLeft = logText.length;
+            let printArray = [];
+            let currentStart = 0;
+            let currentEnd = this.splitLogCharSize;
+
+            while (charsLeft > 0) {
+              printArray.push(logText.substring(currentStart, currentEnd));
+              currentStart = currentEnd;
+
+              if (charsLeft > this.splitLogCharSize) {
+                currentEnd += this.splitLogCharSize;
+              } else {
+                currentEnd += charsLeft;
+              }
+
+              charsLeft -= this.splitLogCharSize;
+            }
+
+            for (let i = 0; i < printArray.length; i++) {
+              if (this.customWriter) {
+                this.customWriter(printArray[i]);
+              } else {
+                console.log(printArray[i]);
+              }
+            }
           } else {
-            console.log(logText);
+            if (this.customWriter) {
+              this.customWriter(logText);
+            } else {
+              console.log(logText);
+            }
           }
         }
       }

@@ -759,3 +759,33 @@ test("Check cyclic JSON - traverse enabled multiple references", () => {
 
   expect(gotResult).toBe(testResult);
 });
+
+test("Test very large string split", () => {
+  const DEBUG = true;
+  let testString = "";
+
+  for (let i = 0; i < 2000; i++) {
+    testString = testString + i + " ";
+  }
+
+  var gotResult = null;
+
+  let sizeCheck = [];
+  const customerTestLogger = (text) => {
+    gotResult = text;
+    sizeCheck.push(text.length);
+    console.log(text);
+  };
+
+  //Setup
+  Log.setIncludeTimestamp(false);
+  Log.setCustomLogger(customerTestLogger);
+  Log.setSplitLogCharSize(4000);
+
+  //Test
+  Log.iLog("{0}", DEBUG, testString);
+
+  expect(sizeCheck[0]).toBe(4000);
+  expect(sizeCheck[1]).toBe(4000);
+  expect(sizeCheck[2]).toBe(896);
+});
