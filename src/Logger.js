@@ -153,14 +153,27 @@ class Logger {
   };
 
   getJSONString = (pretty, val) => {
+    let errorOccured = false;
+    let errorMessage = "";
+
     try {
       return pretty ? JSON.stringify(val, null, 2) : JSON.stringify(val);
     } catch (e) {
       if (!this.traverseCyclicJSON) {
-        return 'Error Occurred "' + e.message + '" Object Key Set: ' + Object.keys(val);
+        errorOccured = true;
+        errorMessage = e.message;
       } else {
-        return this.getCyclicJSONString(pretty, val);
+        try {
+          return this.getCyclicJSONString(pretty, val);
+        } catch (e) {
+          errorOccured = true;
+          errorMessage = e.message;
+        }
       }
+    }
+
+    if (errorOccured) {
+      return 'Error Occurred "' + errorMessage + '" Object Key Set: ' + Object.keys(val);
     }
   };
 
@@ -313,6 +326,10 @@ class Logger {
   };
 
   putSeenNode(seenNodes, obj, path) {
+    if (Object.isFrozen(obj) || Object.isSealed(obj)) {
+      throw { message: "Object at " + path + " frozen or sealed." };
+    }
+
     let cSeenObj = {
       _hasSeenNode: true,
       path: path,
