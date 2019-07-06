@@ -42,7 +42,7 @@ Parameter {0}, {1}, {2} ... {number} replaced with strings of values of objects(
 - **Log.setPrettyJSON(bool)** - Pretty print JSON
 - **Log.setWriteLevel(bool)** - Include the write level in output e.g. INFO:
 - **Log.setIncludeTimestamp(bool)** - Include timestame in output
-- **Log.setTraverseCyclicJSON(bool)** - Set whether if the JSON stringify fails to traverse object and print references. Cyclic object can only be printed if readonly.
+- **Log.setTraverseCyclicJSON(bool)** - Set whether if the JSON stringify fails to traverse object and print references. Cyclic object can only be printed if NOT readonly.
 
 ## Instance Logging:
 

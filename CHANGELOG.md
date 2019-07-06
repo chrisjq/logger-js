@@ -1,3 +1,7 @@
+# 1.0.13 / 2019-07-06
+
+- Fixed documentation.
+
 # 1.0.12 / 2019-07-06
 
 - If cyclic read only fail correctly.
