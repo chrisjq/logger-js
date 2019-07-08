@@ -1,4 +1,13 @@
-# 1.0.14 / 2019-07-06
+# 1.0.17 / 2019-07-08
+
+- Updated documentation and fixed change logs.
+- Cleaned up Logger class and remove general functions outside class.
+
+# 1.0.16 / 2019-07-08
+
+- Use WeakMap for finding seen nodes for cyclic JSON printing.
+
+# 1.0.15 / 2019-07-06
 
 - Added setSplitLogCharSize(number) to write split the log at the specified character count.
 

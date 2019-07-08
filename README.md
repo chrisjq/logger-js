@@ -4,6 +4,8 @@ Java style logger for es6/node.js/react native
 
 Parameter {0}, {1}, {2} ... {number} replaced with strings of values of objects(JSON output) or variables passed to function.
 
+By passing objects to the logger when disabled the logging variables are not serialized to strings for logging thus increasing performance while keeping your logging code in place.
+
 (https://github.com/chrisjq/logger-js.git)
 
 # Usage

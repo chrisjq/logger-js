@@ -45,6 +45,132 @@ function pad3Digit(n) {
   return n;
 }
 
+function getJSONString(enableCyclicOnFailure, pretty, val) {
+  let errorOccured = false;
+  let errorMessage = "";
+
+  try {
+    return pretty ? JSON.stringify(val, null, 2) : JSON.stringify(val);
+  } catch (e) {
+    if (!enableCyclicOnFailure) {
+      errorOccured = true;
+      errorMessage = e.message;
+    } else {
+      try {
+        return getCyclicJSONString(pretty, val);
+      } catch (e) {
+        errorOccured = true;
+        errorMessage = e.message;
+      }
+    }
+  }
+
+  if (errorOccured) {
+    return 'Error Occurred "' + errorMessage + '" Object Key Set: ' + Object.keys(val);
+  }
+}
+
+function getCyclicJSONString(pretty, object) {
+  let seenNodes = new WeakMap();
+
+  let isArray = Array.isArray(object);
+  let newObject = null;
+
+  if (isArray) {
+    newObject = [];
+  } else {
+    newObject = {};
+  }
+
+  putSeenNode(seenNodes, "root", object);
+  processSeenObject(seenNodes, 0, "root", "root", object, newObject);
+
+  return pretty ? JSON.stringify(newObject, null, 2) : JSON.stringify(newObject);
+}
+
+function getSeenNode(seenNodes, obj) {
+  return seenNodes.get(obj);
+}
+
+function putSeenNode(seenNodes, path, originalObject) {
+  let cSeenObj = {
+    path: path,
+  };
+
+  seenNodes.set(originalObject, cSeenObj);
+}
+
+function processSeenObject(seenNodes, depth, currentNodePath, currentNodeName, origObj, newObj) {
+  //Go through all the objects
+  if (Array.isArray(origObj)) {
+    for (let i = 0; i < origObj.length; i++) {
+      let cVal = origObj[i];
+
+      if (cVal !== Object(cVal)) {
+        newObj[i] = cVal;
+      } else {
+        let seenNode = getSeenNode(seenNodes, cVal);
+
+        if (seenNode) {
+          if (Array.isArray(cVal)) {
+            newObj[i] = "REFERENCES => " + seenNode.path;
+          } else {
+            newObj[i] = "REFERENCES => " + seenNode.path;
+          }
+        } else {
+          if (Array.isArray(cVal)) {
+            let newArray = [];
+            newObj[i] = newArray;
+            let cPath = currentNodePath + "." + i;
+            putSeenNode(seenNodes, cPath, cVal);
+            processSeenObject(seenNodes, depth + 1, cPath, i, cVal, newArray);
+          } else {
+            let newObject = {};
+            newObj[i] = newObject;
+            let cPath = currentNodePath + "." + i;
+            putSeenNode(seenNodes, cPath, cVal);
+            processSeenObject(seenNodes, depth + 1, cPath, i, cVal, newObject);
+          }
+        }
+      }
+    }
+  } else {
+    let keySet = Object.keys(origObj);
+    for (let i = 0; i < keySet.length; i++) {
+      let cKey = keySet[i];
+      let cVal = origObj[cKey];
+
+      if (cVal !== Object(cVal)) {
+        newObj[cKey] = cVal;
+      } else {
+        let seenNode = getSeenNode(seenNodes, cVal);
+
+        if (seenNode) {
+          if (Array.isArray(cVal)) {
+            newObj[cKey] = "REFERENCES => " + seenNode.path;
+          } else {
+            newObj[cKey] = "REFERENCES => " + seenNode.path;
+          }
+        } else {
+          if (Array.isArray(cVal)) {
+            let newArray = [];
+            newObj[cKey] = newArray;
+            let cPath = currentNodePath + "." + cKey;
+            putSeenNode(seenNodes, cPath, cVal);
+            processSeenObject(seenNodes, depth + 1, cPath, cKey, cVal, newArray);
+          } else {
+            let newObject = {};
+            newObj[i] = newObject;
+            let cPath = currentNodePath + "." + cKey;
+            putSeenNode(seenNodes, cPath, cVal);
+            processSeenObject(seenNodes, depth + 1, cPath, cKey, cVal, newObject);
+          }
+        }
+      }
+    }
+  }
+}
+
 class Logger {
   constructor(customWriter) {
     this.customWriter = customWriter ? customWriter : null;
@@ -157,132 +283,6 @@ class Logger {
     this.splitLogCharSize = number;
   };
 
-  getJSONString = (pretty, val) => {
-    let errorOccured = false;
-    let errorMessage = "";
-
-    try {
-      return pretty ? JSON.stringify(val, null, 2) : JSON.stringify(val);
-    } catch (e) {
-      if (!this.traverseCyclicJSON) {
-        errorOccured = true;
-        errorMessage = e.message;
-      } else {
-        try {
-          return this.getCyclicJSONString(pretty, val);
-        } catch (e) {
-          errorOccured = true;
-          errorMessage = e.message;
-        }
-      }
-    }
-
-    if (errorOccured) {
-      return 'Error Occurred "' + errorMessage + '" Object Key Set: ' + Object.keys(val);
-    }
-  };
-
-  getCyclicJSONString = (pretty, object) => {
-    let seenNodes = new WeakMap();
-
-    let isArray = Array.isArray(object);
-    let newObject = null;
-
-    if (isArray) {
-      newObject = [];
-    } else {
-      newObject = {};
-    }
-
-    this.putSeenNode(seenNodes, "root", object, newObject);
-    this.processObject(seenNodes, 0, "root", "root", object, newObject);
-
-    return pretty ? JSON.stringify(newObject, null, 2) : JSON.stringify(newObject);
-  };
-
-  processObject = (seenNodes, depth, currentNodePath, currentNodeName, origObj, newObj) => {
-    //Go through all the objects
-    if (Array.isArray(origObj)) {
-      for (let i = 0; i < origObj.length; i++) {
-        let cVal = origObj[i];
-
-        if (cVal !== Object(cVal)) {
-          newObj[i] = cVal;
-        } else {
-          let seenNode = this.getSeenNode(seenNodes, cVal);
-
-          if (seenNode) {
-            if (Array.isArray(cVal)) {
-              newObj[i] = "REFERENCES => " + seenNode.path;
-            } else {
-              newObj[i] = "REFERENCES => " + seenNode.path;
-            }
-          } else {
-            if (Array.isArray(cVal)) {
-              let newArray = [];
-              newObj[i] = newArray;
-              let cPath = currentNodePath + "." + i;
-              this.putSeenNode(seenNodes, cPath, cVal, newArray);
-              this.processObject(seenNodes, depth + 1, cPath, i, cVal, newArray);
-            } else {
-              let newObject = {};
-              newObj[i] = newObject;
-              let cPath = currentNodePath + "." + i;
-              this.putSeenNode(seenNodes, cPath, cVal, newObject);
-              this.processObject(seenNodes, depth + 1, cPath, i, cVal, newObject);
-            }
-          }
-        }
-      }
-    } else {
-      let keySet = Object.keys(origObj);
-      for (let i = 0; i < keySet.length; i++) {
-        let cKey = keySet[i];
-        let cVal = origObj[cKey];
-
-        if (cVal !== Object(cVal)) {
-          newObj[cKey] = cVal;
-        } else {
-          let seenNode = this.getSeenNode(seenNodes, cVal);
-
-          if (seenNode) {
-            if (Array.isArray(cVal)) {
-              newObj[cKey] = "REFERENCES => " + seenNode.path;
-            } else {
-              newObj[cKey] = "REFERENCES => " + seenNode.path;
-            }
-          } else {
-            if (Array.isArray(cVal)) {
-              let newArray = [];
-              newObj[cKey] = newArray;
-              let cPath = currentNodePath + "." + cKey;
-              this.putSeenNode(seenNodes, cPath, cVal, newArray);
-              this.processObject(seenNodes, depth + 1, cPath, cKey, cVal, newArray);
-            } else {
-              let newObject = {};
-              newObj[i] = newObject;
-              let cPath = currentNodePath + "." + cKey;
-              this.putSeenNode(seenNodes, cPath, cVal, newObject);
-              this.processObject(seenNodes, depth + 1, cPath, cKey, cVal, newObject);
-            }
-          }
-        }
-      }
-    }
-  };
-
-  getSeenNode = (seenNodes, obj) => {
-    return seenNodes.get(obj);
-  };
-
-  putSeenNode(seenNodes, path, originalObject, newObject) {
-    let cSeenObj = {
-      path: path,
-    };
-
-    seenNodes.set(originalObject, cSeenObj);
-  }
-
   logInternal = (level, label, instanceEnable, ...oObj) => {
     if (this.loggingEnabled && level >= this.logLevel && instanceEnable ? instanceEnable : false) {
       let logText = null;
@@ -299,7 +299,7 @@ class Logger {
             if (val !== Object(val)) {
               replaceW = val;
             } else {
-              replaceW = this.getJSONString(this.prettyJSON, val);
+              replaceW = getJSONString(this.traverseCyclicJSON, this.prettyJSON, val);
             }
 
             logText = logText.replace(replaceS, replaceW);
