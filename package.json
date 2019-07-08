@@ -1,6 +1,6 @@
 {
   "name": "@chrisq/logger-js",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "Java style logger",
   "main": "index.js",
   "author": "Chris Quin<chrisq@ingenuity.kiwi>",

@@ -183,7 +183,7 @@ class Logger {
   };
 
   getCyclicJSONString = (pretty, object) => {
-    let seenNodes = [];
+    let seenNodes = new WeakMap();
 
     let isArray = Array.isArray(object);
     let newObject = null;
@@ -272,24 +272,15 @@ class Logger {
   };
 
   getSeenNode = (seenNodes, obj) => {
-    for (let i = 0; i < seenNodes.length; i++) {
-      let cSeen = seenNodes[i];
-
-      if (obj === cSeen.originalNode) {
-        return cSeen;
-      }
-    }
-
-    return null;
+    return seenNodes.get(obj);
   };
 
   putSeenNode(seenNodes, path, originalObject, newObject) {
     let cSeenObj = {
       path: path,
-      originalNode: originalObject,
     };
 
-    seenNodes.push(cSeenObj);
+    seenNodes.set(originalObject, cSeenObj);
   }
 
   logInternal = (level, label, instanceEnable, ...oObj) => {
