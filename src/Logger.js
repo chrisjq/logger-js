@@ -32,10 +32,19 @@ export const FINER = 400;
 export const FINEST = 300;
 export const ALL = 0;
 
+const NEWLINE = "\n"; //Default newline character
+const DEFAULT_PRETTY_PADDING_COUNT = 2; //Default padding for pretty print.
+
+/**
+Pad 2 digit number
+*/
 function pad2Digit(n) {
   return n < 10 ? "0" + n : n;
 }
 
+/**
+Pad 3 digit number
+*/
 function pad3Digit(n) {
   if (n < 10) {
     return "00" + n;
@@ -45,24 +54,77 @@ function pad3Digit(n) {
   return n;
 }
 
-function getJSONString(enableCyclicOnFailure, pretty, val) {
+/**
+Creates padding with entered number of spaces.
+*/
+function getSpacePadding(number) {
+  let ret = "";
+
+  for (let i = 0; i < number; i++) {
+    ret += " ";
+  }
+
+  return ret;
+}
+
+/**
+Sorter for Array.sort to sort alphabetically case insensitive.
+*/
+function sortArrayCaseInsensitve(a, b) {
+  return a.toUpperCase().localeCompare(b.toUpperCase());
+}
+
+/**
+Sorter for Array.sort to sort inex objects
+*/
+function indexSorter(a, b) {
+  return a.index - b.index;
+}
+
+/**
+Get a raw string value for logging in the logger.
+*/
+function getReplaceString(config, val) {
+  if (val === undefined) {
+    return "undefined";
+  } else if (val === null) {
+    return "null";
+  } else if (val !== Object(val)) {
+    return val;
+  }
+  if (typeof val === "function") {
+    return "[function]";
+  } else {
+    return getJSONString(config, val);
+  }
+  return "";
+}
+
+/**
+Get a JSON string.
+*/
+function getJSONString(config, val) {
   let errorOccured = false;
   let errorMessage = "";
 
   try {
-    return pretty ? JSON.stringify(val, null, 2) : JSON.stringify(val);
+    const sb = {
+      pretty: config.prettyJSON,
+      newLine: config.prettyNewLine,
+      nextLevelAddition: config.prettyPadding,
+      seenNodes: new WeakMap(),
+      sortKeys: config.sortObjectKeys,
+      sortCaseInsensitive: config.sortObjectKeysCaseInsensitive,
+      ret: "",
+    };
+
+    let nodePath = "/";
+    putSeenNode(sb.seenNodes, nodePath, val);
+    createObjectString("", sb.pretty ? "" : null, sb, val);
+    return sb.ret;
   } catch (e) {
-    if (!enableCyclicOnFailure) {
-      errorOccured = true;
-      errorMessage = e.message;
-    } else {
-      try {
-        return getCyclicJSONString(pretty, val);
-      } catch (e) {
-        errorOccured = true;
-        errorMessage = e.message;
-      }
-    }
+    errorOccured = true;
+    errorMessage = e.message;
   }
 
   if (errorOccured) {
@@ -70,28 +132,172 @@ function getJSONString(enableCyclicOnFailure, pretty, val) {
   }
 }
 
-function getCyclicJSONString(pretty, object) {
-  let seenNodes = new WeakMap();
+/**
+Create a string for an object.
+*/
+function createObjectString(nodePath, startLine, sb, object) {
+  if (Array.isArray(object)) {
+    if (object.length == 0) {
+      sb.ret += "[]";
+    } else {
+      sb.ret += "[";
 
-  let isArray = Array.isArray(object);
-  let newObject = null;
+      let currentLevelStart = sb.pretty ? startLine + sb.nextLevelAddition : null;
 
-  if (isArray) {
-    newObject = [];
+      if (sb.pretty) {
+        sb.ret += sb.newLine;
+      } else {
+        sb.ret += " ";
+      }
+
+      for (let i = 0; i < object.length; i++) {
+        let cVal = object[i];
+
+        createKeyValuePair(nodePath + "/[" + i + "]", currentLevelStart, sb, null, cVal);
+
+        if (i < object.length - 1) {
+          sb.ret += ",";
+        }
+
+        if (sb.pretty) {
+          sb.ret += sb.newLine;
+        } else {
+          sb.ret += " ";
+        }
+      }
+
+      if (sb.pretty) {
+        sb.ret += startLine;
+      }
+
+      sb.ret += "]";
+    }
   } else {
-    newObject = {};
+    let keySet = Object.keys(object);
+
+    if (keySet.length == 0) {
+      sb.ret += "{}";
+    } else {
+      if (sb.sortKeys) {
+        if (sb.sortCaseInsensitive) {
+          keySet.sort(sortArrayCaseInsensitve);
+        } else {
+          keySet.sort();
+        }
+      }
+
+      sb.ret += "{";
+
+      let currentLevelStart = sb.pretty ? startLine + sb.nextLevelAddition : null;
+
+      if (sb.pretty) {
+        sb.ret += sb.newLine;
+      } else {
+        sb.ret += " ";
+      }
+
+      for (let i = 0; i < keySet.length; i++) {
+        let cKey = keySet[i];
+        let cVal = object[cKey];
+        let currentNodePath = nodePath + "/" + cKey;
+
+        createKeyValuePair(currentNodePath, currentLevelStart, sb, cKey, cVal);
+
+        if (i < keySet.length - 1) {
+          sb.ret += ",";
+        }
+
+        if (sb.pretty) {
+          sb.ret += sb.newLine;
+        } else {
+          sb.ret += " ";
+        }
+      }
+
+      if (sb.pretty) {
+        sb.ret += startLine;
+      }
+
+      sb.ret += "}";
+    }
   }
-
-  putSeenNode(seenNodes, "root", object);
-  processSeenObject(seenNodes, 0, "root", "root", object, newObject);
-
-  return pretty ? JSON.stringify(newObject, null, 2) : JSON.stringify(newObject);
 }
 
+/**
+Create a string an object item.
+*/
+function createKeyValuePair(nodePath, lineStart, sb, key, val) {
+  let nextLineStart = null;
+
+  if (sb.pretty) {
+    sb.ret += lineStart;
+  }
+
+  if (key) {
+    let keyString = key + ": ";
+    sb.ret += keyString;
+
+    let space = "";
+
+    for (let i = 0; i < keyString.length; i++) {
+      space += " ";
+    }
+
+    if (sb.pretty) {
+      nextLineStart = lineStart ? lineStart + space : null;
+    }
+  } else if (sb.pretty) {
+    nextLineStart = lineStart ? lineStart : null;
+  }
+
+  if (val === undefined) {
+    sb.ret += "undefined";
+  } else if (val === null) {
+    sb.ret += "null";
+  } else if (val === String(val)) {
+    sb.ret += '"' + val + '"';
+  } else if (val !== Object(val)) {
+    sb.ret += val;
+  } else {
+    if (typeof val === "function") {
+      sb.ret += "[function]";
+    } else {
+      let seenNode = getSeenNode(sb.seenNodes, val);
+
+      if (seenNode) {
+        sb.ret += '"@ref:' + seenNode.path + '"';
+      } else {
+        putSeenNode(sb.seenNodes, nodePath, val);
+
+        if (Array.isArray(val)) {
+          if (val.length == 0) {
+            sb.ret += "[]";
+          } else {
+            createObjectString(nodePath, nextLineStart, sb, val);
+          }
+        } else {
+          let keys = Object.keys(val);
+          if (keys.length == 0) {
+            sb.ret += "{}";
+          } else {
+            createObjectString(nodePath, nextLineStart, sb, val);
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+Get a seen node from the WeakMap
+*/
 function getSeenNode(seenNodes, obj) {
   return seenNodes.get(obj);
 }
 
+/**
+Put a seen node into the WeakMap
+*/
 function putSeenNode(seenNodes, path, originalObject) {
   let cSeenObj = {
     path: path,
@@ -100,87 +306,24 @@ function putSeenNode(seenNodes, path, originalObject) {
   seenNodes.set(originalObject, cSeenObj);
 }
 
-function processSeenObject(seenNodes, depth, currentNodePath, currentNodeName, origObj, newObj) {
-  //Go through all the objects
-  if (Array.isArray(origObj)) {
-    for (let i = 0; i < origObj.length; i++) {
-      let cVal = origObj[i];
-
-      if (cVal !== Object(cVal)) {
-        newObj[i] = cVal;
-      } else {
-        let seenNode = getSeenNode(seenNodes, cVal);
-
-        if (seenNode) {
-          if (Array.isArray(cVal)) {
-            newObj[i] = "REFERENCES => " + seenNode.path;
-          } else {
-            newObj[i] = "REFERENCES => " + seenNode.path;
-          }
-        } else {
-          if (Array.isArray(cVal)) {
-            let newArray = [];
-            newObj[i] = newArray;
-            let cPath = currentNodePath + "." + i;
-            putSeenNode(seenNodes, cPath, cVal);
-            processSeenObject(seenNodes, depth + 1, cPath, i, cVal, newArray);
-          } else {
-            let newObject = {};
-            newObj[i] = newObject;
-            let cPath = currentNodePath + "." + i;
-            putSeenNode(seenNodes, cPath, cVal);
-            processSeenObject(seenNodes, depth + 1, cPath, i, cVal, newObject);
-          }
-        }
-      }
-    }
-  } else {
-    let keySet = Object.keys(origObj);
-    for (let i = 0; i < keySet.length; i++) {
-      let cKey = keySet[i];
-      let cVal = origObj[cKey];
-
-      if (cVal !== Object(cVal)) {
-        newObj[cKey] = cVal;
-      } else {
-        let seenNode = getSeenNode(seenNodes, cVal);
-
-        if (seenNode) {
-          if (Array.isArray(cVal)) {
-            newObj[cKey] = "REFERENCES => " + seenNode.path;
-          } else {
-            newObj[cKey] = "REFERENCES => " + seenNode.path;
-          }
-        } else {
-          if (Array.isArray(cVal)) {
-            let newArray = [];
-            newObj[cKey] = newArray;
-            let cPath = currentNodePath + "." + cKey;
-            putSeenNode(seenNodes, cPath, cVal);
-            processSeenObject(seenNodes, depth + 1, cPath, cKey, cVal, newArray);
-          } else {
-            let newObject = {};
-            newObj[i] = newObject;
-            let cPath = currentNodePath + "." + cKey;
-            putSeenNode(seenNodes, cPath, cVal);
-            processSeenObject(seenNodes, depth + 1, cPath, cKey, cVal, newObject);
-          }
-        }
-      }
-    }
-  }
-}
-
+/**
+Main Logger class.
+*/
 class Logger {
   constructor(customWriter) {
     this.customWriter = customWriter ? customWriter : null;
-    this.logLevel = ALL;
-    this.loggingEnabled = true;
-    this.prettyJSON = true;
-    this.writeLevel = true;
-    this.includeTimestamp = true;
-    this.traverseCyclicJSON = true;
-    this.splitLogCharSize = null;
+    this.cfg = {
+      logLevel: ALL,
+      loggingEnabled: true,
+      prettyJSON: true,
+      writeLevel: true,
+      includeTimestamp: true,
+      splitLogCharSize: null,
+      prettyNewLine: NEWLINE,
+      prettyPadding: getSpacePadding(DEFAULT_PRETTY_PADDING_COUNT),
+      sortObjectKeys: true,
+      sortObjectKeysCaseInsensitive: false,
+    };
   }
 
   //Instance logging, to enable or disable at the instace level
@@ -256,59 +399,127 @@ class Logger {
   };
 
   setLogLevel = (number) => {
-    this.logLevel = number;
+    this.cfg.logLevel = number;
   };
 
   setLoggingEnabled = (bool) => {
-    this.loggingEnabled = bool;
+    this.cfg.loggingEnabled = bool;
   };
 
   setPrettyJSON = (bool) => {
-    this.prettyJSON = bool;
+    this.cfg.prettyJSON = bool;
   };
 
   setWriteLevel = (bool) => {
-    this.writeLevel = bool;
+    this.cfg.writeLevel = bool;
   };
 
   setIncludeTimestamp = (bool) => {
-    this.includeTimestamp = bool;
-  };
-
-  setTraverseCyclicJSON = (bool) => {
-    this.traverseCyclicJSON = bool;
+    this.cfg.includeTimestamp = bool;
   };
 
   setSplitLogCharSize = (number) => {
-    this.splitLogCharSize = number;
+    this.cfg.splitLogCharSize = number;
   };
 
+  setPrettyNewLine = (newLine) => {
+    if (newLine) {
+      this.cfg.prettyNewLine = newLine;
+    } else {
+      this.cfg.prettyNewLine = NEWLINE;
+    }
+  };
+
+  setPrettyPaddingCount = (number) => {
+    if (number) {
+      this.cfg.prettyPadding = getSpacePadding(number);
+    } else {
+      this.cfg.prettyPadding = getSpacePadding(DEFAULT_PRETTY_PADDING_COUNT);
+    }
+  };
+
+  setSortObjectKeys = (sortEnabledBool, caseInsensitiveBool) => {
+    this.cfg.sortObjectKeys = sortEnabledBool;
+    this.cfg.sortObjectKeysCaseInsensitive = caseInsensitiveBool;
+  };
+
+  /**
+Main logging method to create the log string.
+*/
   logInternal = (level, label, instanceEnable, ...oObj) => {
-    if (this.loggingEnabled && level >= this.logLevel && instanceEnable ? instanceEnable : false) {
+    if (this.cfg.loggingEnabled && level >= this.cfg.logLevel && instanceEnable ? instanceEnable : false) {
       let logText = null;
 
       if (label) {
-        logText = label;
+        if (oObj && oObj.length > 0) {
+          //Find the inices of the replace logText
+          let indices = [];
+          let currentIndex = 0;
 
-        if (oObj) {
-          let i = 0;
+          //Go throught the objects and create an array index
           for (let val of oObj) {
-            let replaceS = "{" + i + "}";
+            let replaceS = "{" + currentIndex + "}";
+            let index = label.indexOf(replaceS);
 
-            let replaceW = "";
-            if (val !== Object(val)) {
-              replaceW = val;
-            } else {
-              replaceW = getJSONString(this.traverseCyclicJSON, this.prettyJSON, val);
+            if (index >= 0) {
+              indices.push({
+                id: replaceS,
+                index: index,
+                val: val,
+              });
             }
 
-            logText = logText.replace(replaceS, replaceW);
-
-            i++;
+            currentIndex++;
           }
+
+          //If we have indices sort them in the order they were used in the label
+          if (indices.length > 0) {
+            let subString = [];
+            indices.sort(indexSorter); //Sort the index objects in the order they were used in the label
+
+            let startIndex = 0;
+
+            //Split the original label into substrings minus the replacement labels.
+            for (let index of indices) {
+              if (startIndex == 0 && index.index == 0) {
+                subString.push("");
+              } else {
+                subString.push(label.substring(startIndex, index.index));
+              }
+
+              startIndex = index.index + index.id.length;
+            }
+
+            if (startIndex < label.length) {
+              subString.push(label.substring(startIndex));
+            }
+
+            logText = "";
+
+            let indexPos = -1; //Skip the first
+
+            //Append the substrings and values to the log entry.
+            for (let s of subString) {
+              if (indexPos >= 0 && indexPos < indices.length) {
+                let index = indices[indexPos];
+                logText += getReplaceString(this.cfg, index.val);
+              }
+
+              logText += s;
+              indexPos++;
+            }
+
+            //Add the last indexed item if we have one
+            if (indexPos >= 0 && indexPos < indices.length) {
+              let index = indices[indexPos];
+              logText += getReplaceString(this.cfg, index.val);
+            }
+          }
+        } else {
+          logText = label;
         }
 
-        if (this.writeLevel) {
+        if (this.cfg.writeLevel) {
           switch (level) {
             case SEVERE:
               logText = "SEVERE: " + logText;
@@ -358,23 +569,23 @@ class Logger {
         }
 
         if (logText) {
-          if (this.splitLogCharSize && logText.length > this.splitLogCharSize) {
+          if (this.cfg.splitLogCharSize && logText.length > this.cfg.splitLogCharSize) {
             let charsLeft = logText.length;
             let printArray = [];
             let currentStart = 0;
-            let currentEnd = this.splitLogCharSize;
+            let currentEnd = this.cfg.splitLogCharSize;
 
             while (charsLeft > 0) {
               printArray.push(logText.substring(currentStart, currentEnd));
               currentStart = currentEnd;
 
-              if (charsLeft > this.splitLogCharSize) {
-                currentEnd += this.splitLogCharSize;
+              if (charsLeft > this.cfg.splitLogCharSize) {
+                currentEnd += this.cfg.splitLogCharSize;
               } else {
                 currentEnd += charsLeft;
               }
 
-              charsLeft -= this.splitLogCharSize;
+              charsLeft -= this.cfg.splitLogCharSize;
             }
 
             for (let i = 0; i < printArray.length; i++) {

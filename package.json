@@ -1,7 +1,7 @@
 {
   "name": "@chrisq/logger-js",
-  "version": "1.0.17",
-  "description": "Java style logger",
+  "version": "1.1.0",
+  "description": "Java style logger - easy variable parameterization for logging.",
   "main": "index.js",
   "author": "Chris Quin<chrisq@ingenuity.kiwi>",
   "license": "MIT",
@@ -12,13 +12,16 @@
   "keywords": [
     "logging",
     "logger",
+    "log",
     "tools",
     "java.util.logging",
     "console",
     "custom logging",
     "indexed",
     "pretty print",
-    "react native logging"
+    "react native logging",
+    "parameterization",
+    "easy"
   ],
   "scripts": {
     "test": "jest test/test.js"
