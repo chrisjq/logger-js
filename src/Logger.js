@@ -35,6 +35,9 @@ export const ALL = 0;
 const NEWLINE = "\n"; //Default newline character
 const DEFAULT_PRETTY_PADDING_COUNT = 2; //Default padding for pretty print.
 
+function replaceSpecialChars(s) {
+  return s.replace(/\n/g, "\\n").replace(/\r/g, "\\r");
+}
 /**
 Pad 2 digit number
 */
@@ -119,6 +122,8 @@ function getJSONString(config, val) {
       prettyPrintFunctions: config.prettyPrintFunctions,
       prettyPrintNull: config.prettyPrintNull,
       prettyPrintUndefined: config.prettyPrintUndefined,
+      prettyPrintIncludeKeyLengthInPadding: config.prettyPrintIncludeKeyLengthInPadding,
+      replaceSpecialCharacterInJSONString: config.replaceSpecialCharacterInJSONString,
     };
 
     let nodePath = "/";
@@ -303,8 +308,10 @@ function createKeyValuePair(nodePath, lineStart, sb, key, val) {
 
     let space = "";
 
-    for (let i = 0; i < keyString.length; i++) {
-      space += " ";
+    if (sb.prettyPrintIncludeKeyLengthInPadding) {
+      for (let i = 0; i < keyString.length; i++) {
+        space += " ";
+      }
     }
 
     if (sb.pretty) {
@@ -319,7 +326,11 @@ function createKeyValuePair(nodePath, lineStart, sb, key, val) {
   } else if (val === null) {
     sb.ret += "null";
   } else if (val === String(val)) {
-    sb.ret += '"' + val + '"';
+    if (sb.replaceSpecialCharacterInJSONString) {
+      sb.ret += '"' + replaceSpecialChars(val) + '"';
+    } else {
+      sb.ret += '"' + val + '"';
+    }
   } else if (val !== Object(val)) {
     sb.ret += val;
   } else {
@@ -390,6 +401,8 @@ class Logger {
       prettyPrintFunctions: true,
       prettyPrintNull: true,
       prettyPrintUndefined: true,
+      prettyPrintIncludeKeyLengthInPadding: false,
+      replaceSpecialCharacterInJSONString: true,
     };
   }
 
@@ -520,6 +533,14 @@ class Logger {
 
   setPrettyPrintUndefined = (bool) => {
     this.cfg.prettyPrintUndefined = bool;
+  };
+
+  setPrettyPrintIncludeKeyLengthInPadding = (bool) => {
+    this.cfg.prettyPrintIncludeKeyLengthInPadding = bool;
+  };
+
+  setReplaceSpecialCharacterInJSONString = (bool) => {
+    this.cfg.replaceSpecialCharacterInJSONString = bool;
   };
 
   /**

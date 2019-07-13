@@ -56,6 +56,8 @@ Text is only quoted if part of a JSON object value.
 - **Log.setPrettyPrintFunctions(bool)** - Pretty print JSON functions as [function]. Default is true.
 - **Log.setPrettyPrintNull(bool)** - Pretty print JSON nulls as null. Default is true.
 - **Log.setPrettyPrintUndefined(bool)** - Pretty print JSON undefined as undefined. Default is true.
+- **Log.setPrettyPrintIncludeKeyLengthInPadding(bool)** - Pretty print JSON, include key length in padding. Default is false.
+- **Log.setReplaceSpecialCharacterInJSONString(bool)** - Pretty print JSON, replace newline and carriage return with \n and \r. Default is false.
 
 ## Instance Logging:
 

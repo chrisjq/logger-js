@@ -1178,7 +1178,7 @@ test("Check JSON no functions printed", () => {
   expect(gotResult).toBe(testResult);
 });
 
-test("Check JSON Pretty", () => {
+test("Check JSON Pretty with key length added", () => {
   const testJSON = {
     Test: "Testing",
     test1: null,
@@ -1219,10 +1219,100 @@ test("Check JSON Pretty", () => {
   Log.setPrettyPrintFunctions(true);
   Log.setPrettyPrintNull(true);
   Log.setPrettyPrintUndefined(true);
+  Log.setPrettyPrintIncludeKeyLengthInPadding(true);
 
   //Test
   Log.log("This is some test JSON {0}", testJSON);
   Log.setPrettyJSON(true);
+
+  expect(gotResult).toBe(testResult);
+});
+
+test("Check JSON Pretty without key length added", () => {
+  const testJSON = {
+    Test: "Testing",
+    test1: null,
+    test2: undefined,
+    array: [
+      "one",
+      "two",
+      "three",
+      {
+        one: 1,
+        two: 2,
+        three: 3,
+      },
+    ],
+    obj: {
+      one: 1,
+      two: 2,
+      three: 3,
+    },
+    testFunction: function() {},
+  };
+
+  const testResult =
+    'INFO: This is some test JSON {\n  Test: "Testing",\n  array: [\n    "one",\n    "two",\n    "three",\n    {\n      one: 1,\n      three: 3,\n      two: 2\n    }\n  ],\n  obj: {\n    one: 1,\n    three: 3,\n    two: 2\n  },\n  test1: null,\n  test2: undefined,\n  testFunction: [function]\n}';
+
+  var gotResult = null;
+
+  const customerTestLogger = (text) => {
+    gotResult = text;
+
+    console.log(text);
+  };
+
+  //Setup
+  Log.setPrettyJSON(true);
+  Log.setIncludeTimestamp(false);
+  Log.setCustomLogger(customerTestLogger);
+  Log.setPrettyPrintFunctions(true);
+  Log.setPrettyPrintNull(true);
+  Log.setPrettyPrintUndefined(true);
+  Log.setPrettyPrintIncludeKeyLengthInPadding(false);
+
+  //Test
+  Log.log("This is some test JSON {0}", testJSON);
+  Log.setPrettyJSON(true);
+
+  expect(gotResult).toBe(testResult);
+});
+
+test("Check JSON no null printed", () => {
+  const testJSON = {
+    test4: 1000,
+    test1: "Testing\nhi",
+    test2: null,
+    test3: undefined,
+    Test5: function() {},
+  };
+
+  const testResult = 'INFO: This is some test JSON { test4: 1000, test1: "Testing\\nhi", test3: undefined, Test5: [function] }';
+  var gotResult = null;
+
+  const customerTestLogger = (text) => {
+    gotResult = text;
+
+    console.log(text);
+  };
+
+  //Setup
+  Log.setPrettyJSON(false);
+  Log.setIncludeTimestamp(false);
+  Log.setCustomLogger(customerTestLogger);
+  Log.setSortObjectKeys(false, false);
+  Log.setPrettyPrintFunctions(true);
+  Log.setPrettyPrintNull(false);
+  Log.setPrettyPrintUndefined(true);
+  Log.setReplaceSpecialCharacterInJSONString(true);
+
+  //Test
+  Log.log("This is some test JSON {0}", testJSON);
+  Log.setPrettyJSON(true);
+  Log.setSortObjectKeys(true, false);
+  Log.setPrettyPrintFunctions(true);
+  Log.setPrettyPrintNull(true);
+  Log.setPrettyPrintUndefined(true);
 
   expect(gotResult).toBe(testResult);
 });
