@@ -742,6 +742,7 @@ test("Test very large string split", () => {
   Log.setIncludeTimestamp(false);
   Log.setCustomLogger(customerTestLogger);
   Log.setSplitLogCharSize(4000);
+  Log.setSplitLogCheckNewlineSize(null);
 
   //Test
   Log.iLog("{0}", DEBUG, testString);
@@ -1351,8 +1352,6 @@ test("Test very large string split on newline", () => {
   //Test
   Log.iLog("{0}", DEBUG, testString);
 
-  expect(sizeCheck[0]).toBe(4055);
-  expect(sizeCheck[1]).toBe(946);
-
-  expect(gotResult).toBe(testResult);
+  expect(sizeCheck[0]).toBe(4056);
+  expect(sizeCheck[1]).toBe(945);
 });

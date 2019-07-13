@@ -1,3 +1,8 @@
+# 1.1.6 / 2019-07-13
+
+- Fixed tests.
+- Split on newline include newline in output instead of the beginning of the next.
+
 # 1.1.5 / 2019-07-13
 
 - Added setSplitLogCheckNewlineSize so that if you set the split size it checks for a newline character in this amount of characters and splits on that.

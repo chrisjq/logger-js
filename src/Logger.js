@@ -681,13 +681,14 @@ Main logging method to create the log string.
             let currentEnd = this.cfg.splitLogCharSize;
 
             while (charsLeft > 0) {
-              if (this.cfg.splitLogCheckNewlineSize) {
-                console.log("Check splits");
-                let nextNewLine = logText.indexOf("\n", currentEnd);
-                let diff = nextNewLine - currentStart - this.cfg.splitLogCharSize;
+              if (charsLeft > this.cfg.splitLogCharSize) {
+                if (this.cfg.splitLogCheckNewlineSize) {
+                  let nextNewLine = logText.indexOf("\n", currentEnd);
+                  let diff = nextNewLine - currentStart - this.cfg.splitLogCharSize + 1;
 
-                if (nextNewLine > currentEnd && diff >= 0 && diff <= this.cfg.splitLogCheckNewlineSize) {
-                  currentEnd = nextNewLine;
+                  if (nextNewLine > currentEnd && diff >= 0 && diff <= this.cfg.splitLogCheckNewlineSize) {
+                    currentEnd = nextNewLine + 1;
+                  }
                 }
               }
 
