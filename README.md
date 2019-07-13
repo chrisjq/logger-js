@@ -53,6 +53,9 @@ Text is only quoted if part of a JSON object value.
 - **Log.setPrettyNewLine(string)** - The newline string to use for pretty JSON. Default is neline character.
 - **Log.setPrettyPaddingCount(number)** - The pretty printed JSON padding to be added to each level. Default 2
 - **Log.setSortObjectKeys(sortEnabledBool, caseInsensitiveBool)** - Whether to sort the JSON keys alphabetically and if enabled whether the sort is case sensitive. Default sortEnabledBool = true, caseInsensitiveBool = false
+- **Log.setPrettyPrintFunctions(bool)** - Pretty print JSON functions as [function]. Default is true.
+- **Log.setPrettyPrintNull(bool)** - Pretty print JSON nulls as null. Default is true.
+- **Log.setPrettyPrintUndefined(bool)** - Pretty print JSON undefined as undefined. Default is true.
 
 ## Instance Logging:
 

@@ -116,6 +116,9 @@ function getJSONString(config, val) {
       sortKeys: config.sortObjectKeys,
       sortCaseInsensitive: config.sortObjectKeysCaseInsensitive,
       ret: "",
+      prettyPrintFunctions: config.prettyPrintFunctions,
+      prettyPrintNull: config.prettyPrintNull,
+      prettyPrintUndefined: config.prettyPrintUndefined,
     };
 
     let nodePath = "/";
@@ -150,24 +153,53 @@ function createObjectString(nodePath, startLine, sb, object) {
         sb.ret += " ";
       }
 
+      let hasAdded = false;
+
       for (let i = 0; i < object.length; i++) {
         let cVal = object[i];
+        let print = true;
 
-        createKeyValuePair(nodePath + "/[" + i + "]", currentLevelStart, sb, null, cVal);
-
-        if (i < object.length - 1) {
-          sb.ret += ",";
+        if (print && !sb.prettyPrintNull) {
+          if (cVal === null) {
+            print = false;
+          }
         }
 
-        if (sb.pretty) {
-          sb.ret += sb.newLine;
-        } else {
-          sb.ret += " ";
+        if (print && !sb.prettyPrintUndefined) {
+          if (cVal === undefined) {
+            print = false;
+          }
+        }
+
+        if (print && !sb.prettyPrintFunctions) {
+          if (typeof cVal === "function") {
+            print = false;
+          }
+        }
+
+        if (print) {
+          if (hasAdded) {
+            if (sb.pretty) {
+              sb.ret += ",";
+            } else {
+              sb.ret += ", ";
+            }
+          } else {
+            hasAdded = true;
+          }
+
+          createKeyValuePair(nodePath + "/[" + i + "]", currentLevelStart, sb, null, cVal);
+
+          if (sb.pretty) {
+            sb.ret += sb.newLine;
+          }
         }
       }
 
       if (sb.pretty) {
         sb.ret += startLine;
+      } else if (hasAdded) {
+        sb.ret += " ";
       }
 
       sb.ret += "]";
@@ -196,26 +228,56 @@ function createObjectString(nodePath, startLine, sb, object) {
         sb.ret += " ";
       }
 
+      let hasAdded = false;
+
       for (let i = 0; i < keySet.length; i++) {
         let cKey = keySet[i];
         let cVal = object[cKey];
         let currentNodePath = nodePath + "/" + cKey;
 
-        createKeyValuePair(currentNodePath, currentLevelStart, sb, cKey, cVal);
+        let print = true;
 
-        if (i < keySet.length - 1) {
-          sb.ret += ",";
+        if (print && !sb.prettyPrintNull) {
+          if (cVal === null) {
+            print = false;
+          }
         }
 
-        if (sb.pretty) {
-          sb.ret += sb.newLine;
-        } else {
-          sb.ret += " ";
+        if (print && !sb.prettyPrintUndefined) {
+          if (cVal === undefined) {
+            print = false;
+          }
+        }
+
+        if (print && !sb.prettyPrintFunctions) {
+          if (typeof cVal === "function") {
+            print = false;
+          }
+        }
+
+        if (print) {
+          if (hasAdded) {
+            if (sb.pretty) {
+              sb.ret += ",";
+            } else {
+              sb.ret += ", ";
+            }
+          } else {
+            hasAdded = true;
+          }
+
+          createKeyValuePair(currentNodePath, currentLevelStart, sb, cKey, cVal);
+
+          if (sb.pretty) {
+            sb.ret += sb.newLine;
+          }
         }
       }
 
       if (sb.pretty) {
         sb.ret += startLine;
+      } else if (hasAdded) {
+        sb.ret += " ";
       }
 
       sb.ret += "}";
@@ -323,6 +385,9 @@ class Logger {
       prettyPadding: getSpacePadding(DEFAULT_PRETTY_PADDING_COUNT),
       sortObjectKeys: true,
       sortObjectKeysCaseInsensitive: false,
+      prettyPrintFunctions: true,
+      prettyPrintNull: true,
+      prettyPrintUndefined: true,
     };
   }
 
@@ -441,6 +506,18 @@ class Logger {
   setSortObjectKeys = (sortEnabledBool, caseInsensitiveBool) => {
     this.cfg.sortObjectKeys = sortEnabledBool;
     this.cfg.sortObjectKeysCaseInsensitive = caseInsensitiveBool;
+  };
+
+  setPrettyPrintFunctions = (bool) => {
+    this.cfg.prettyPrintFunctions = bool;
+  };
+
+  setPrettyPrintNull = (bool) => {
+    this.cfg.prettyPrintNull = bool;
+  };
+
+  setPrettyPrintUndefined = (bool) => {
+    this.cfg.prettyPrintUndefined = bool;
   };
 
   /**
