@@ -50,6 +50,7 @@ Text is only quoted if part of a JSON object value.
 - **Log.setWriteLevel(bool)** - Include the write level in output e.g. INFO:. Default is true.
 - **Log.setIncludeTimestamp(bool)** - Include timestame in output. Default is true.
 - **Log.setSplitLogCharSize(number)** - Set to split a very large log at the specified character count. e.g. Log.setSplitLogCharSize(4000); //Useful for adb logcat so the log isn't truncated. Default is null.
+- **Log.setSplitLogCheckNewlineSize(number)** - Split on a neline if it is within the character count threshold given. Default is 200 characters.
 - **Log.setPrettyNewLine(string)** - The newline string to use for pretty JSON. Default is neline character.
 - **Log.setPrettyPaddingCount(number)** - The pretty printed JSON padding to be added to each level. Default 2
 - **Log.setSortObjectKeys(sortEnabledBool, caseInsensitiveBool)** - Whether to sort the JSON keys alphabetically and if enabled whether the sort is case sensitive. Default sortEnabledBool = true, caseInsensitiveBool = false

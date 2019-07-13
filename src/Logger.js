@@ -394,6 +394,7 @@ class Logger {
       writeLevel: true,
       includeTimestamp: true,
       splitLogCharSize: null,
+      splitLogCheckNewlineSize: 200,
       prettyNewLine: NEWLINE,
       prettyPadding: getSpacePadding(DEFAULT_PRETTY_PADDING_COUNT),
       sortObjectKeys: true,
@@ -500,6 +501,10 @@ class Logger {
 
   setSplitLogCharSize = (number) => {
     this.cfg.splitLogCharSize = number;
+  };
+
+  setSplitLogCheckNewlineSize = (number) => {
+    this.cfg.splitLogCheckNewlineSize = number;
   };
 
   setPrettyNewLine = (newLine) => {
@@ -676,6 +681,16 @@ Main logging method to create the log string.
             let currentEnd = this.cfg.splitLogCharSize;
 
             while (charsLeft > 0) {
+              if (this.cfg.splitLogCheckNewlineSize) {
+                console.log("Check splits");
+                let nextNewLine = logText.indexOf("\n", currentEnd);
+                let diff = nextNewLine - currentStart - this.cfg.splitLogCharSize;
+
+                if (nextNewLine > currentEnd && diff >= 0 && diff <= this.cfg.splitLogCheckNewlineSize) {
+                  currentEnd = nextNewLine;
+                }
+              }
+
               printArray.push(logText.substring(currentStart, currentEnd));
               currentStart = currentEnd;
 

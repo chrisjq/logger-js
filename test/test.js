@@ -1316,3 +1316,43 @@ test("Check JSON no null printed", () => {
 
   expect(gotResult).toBe(testResult);
 });
+
+test("Test very large string split on newline", () => {
+  const DEBUG = true;
+  let testString = "";
+
+  //Lines
+  for (let i = 0; i < 37; i++) {
+    //chars per line
+    for (let i = 0; i < 13; i++) {
+      for (let i = 0; i < 10; i++) {
+        testString += i;
+      }
+    }
+
+    testString += "<NL>\n";
+  }
+
+  var gotResult = null;
+
+  let sizeCheck = [];
+  const customerTestLogger = (text) => {
+    gotResult = text;
+    sizeCheck.push(text.length);
+    console.log(text + " = " + text.length);
+  };
+
+  //Setup
+  Log.setIncludeTimestamp(false);
+  Log.setCustomLogger(customerTestLogger);
+  Log.setSplitLogCharSize(4003);
+  Log.setSplitLogCheckNewlineSize(200);
+
+  //Test
+  Log.iLog("{0}", DEBUG, testString);
+
+  expect(sizeCheck[0]).toBe(4055);
+  expect(sizeCheck[1]).toBe(946);
+
+  expect(gotResult).toBe(testResult);
+});

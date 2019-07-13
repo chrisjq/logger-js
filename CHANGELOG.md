@@ -1,3 +1,7 @@
+# 1.1.5 / 2019-07-13
+
+- Added setSplitLogCheckNewlineSize so that if you set the split size it checks for a newline character in this amount of characters and splits on that.
+
 # 1.1.4 / 2019-07-13
 
 - JSON strings are not quoted.
