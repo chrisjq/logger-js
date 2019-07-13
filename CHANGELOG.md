@@ -1,3 +1,18 @@
+# 1.1.4 / 2019-07-13
+
+- JSON strings are not quoted.
+- Functions are printed as [function]
+- Print null variable, print undefined variables.
+- Allow for sorting of JSON keys.
+- Changed reference notation to @ref:/path/to/node/array/[index]
+- Removed option to disable custom JSON printing function.
+- Updated test to include more functionality.
+- Updated documentation with new functionality.
+- Added functionality to disable the printing of functions, null or undefined variables in JSON objects.
+- Fixed bug where the comma wasn't printed on json pretty print.
+- Added ability to replace \n and \r in string literals in JSON.
+- Added option to add or remove key size in padding of JSON object.
+
 # 1.0.17 / 2019-07-08
 
 - Updated documentation and fixed change logs.

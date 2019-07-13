@@ -402,7 +402,7 @@ class Logger {
       prettyPrintNull: true,
       prettyPrintUndefined: true,
       prettyPrintIncludeKeyLengthInPadding: false,
-      replaceSpecialCharacterInJSONString: true,
+      replaceSpecialCharacterInJSONString: false,
     };
   }
 
