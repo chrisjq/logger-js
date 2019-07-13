@@ -1177,3 +1177,52 @@ test("Check JSON no functions printed", () => {
 
   expect(gotResult).toBe(testResult);
 });
+
+test("Check JSON Pretty", () => {
+  const testJSON = {
+    Test: "Testing",
+    test1: null,
+    test2: undefined,
+    array: [
+      "one",
+      "two",
+      "three",
+      {
+        one: 1,
+        two: 2,
+        three: 3,
+      },
+    ],
+    obj: {
+      one: 1,
+      two: 2,
+      three: 3,
+    },
+    testFunction: function() {},
+  };
+
+  const testResult =
+    'INFO: This is some test JSON {\n  Test: "Testing",\n  array: [\n           "one",\n           "two",\n           "three",\n           {\n             one: 1,\n             three: 3,\n             two: 2\n           }\n         ],\n  obj: {\n         one: 1,\n         three: 3,\n         two: 2\n       },\n  test1: null,\n  test2: undefined,\n  testFunction: [function]\n}';
+
+  var gotResult = null;
+
+  const customerTestLogger = (text) => {
+    gotResult = text;
+
+    console.log(text);
+  };
+
+  //Setup
+  Log.setPrettyJSON(true);
+  Log.setIncludeTimestamp(false);
+  Log.setCustomLogger(customerTestLogger);
+  Log.setPrettyPrintFunctions(true);
+  Log.setPrettyPrintNull(true);
+  Log.setPrettyPrintUndefined(true);
+
+  //Test
+  Log.log("This is some test JSON {0}", testJSON);
+  Log.setPrettyJSON(true);
+
+  expect(gotResult).toBe(testResult);
+});

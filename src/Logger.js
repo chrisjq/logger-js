@@ -179,9 +179,7 @@ function createObjectString(nodePath, startLine, sb, object) {
 
         if (print) {
           if (hasAdded) {
-            if (sb.pretty) {
-              sb.ret += ",";
-            } else {
+            if (!sb.pretty) {
               sb.ret += ", ";
             }
           } else {
@@ -191,6 +189,9 @@ function createObjectString(nodePath, startLine, sb, object) {
           createKeyValuePair(nodePath + "/[" + i + "]", currentLevelStart, sb, null, cVal);
 
           if (sb.pretty) {
+            if (i < object.length - 1) {
+              sb.ret += ",";
+            }
             sb.ret += sb.newLine;
           }
         }
@@ -257,9 +258,7 @@ function createObjectString(nodePath, startLine, sb, object) {
 
         if (print) {
           if (hasAdded) {
-            if (sb.pretty) {
-              sb.ret += ",";
-            } else {
+            if (!sb.pretty) {
               sb.ret += ", ";
             }
           } else {
@@ -269,6 +268,9 @@ function createObjectString(nodePath, startLine, sb, object) {
           createKeyValuePair(currentNodePath, currentLevelStart, sb, cKey, cVal);
 
           if (sb.pretty) {
+            if (i < keySet.length - 1) {
+              sb.ret += ",";
+            }
             sb.ret += sb.newLine;
           }
         }
