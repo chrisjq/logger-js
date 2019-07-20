@@ -1,7 +1,7 @@
 "use strict";
 
 import { Log } from "../index.js";
-import { OFF, SEVERE, WARNING, INFO, CONFIG, FINE, FINER, FINEST, ALL } from "../src/Logger.js";
+import { OFF, SEVERE, WARNING, INFO, CONFIG, FINE, FINER, FINEST, ALL } from "../index.js";
 
 //Standard methods
 test("Check basic log INFO", () => {
@@ -789,10 +789,12 @@ test("Check all types in JSON", () => {
   Log.setPrettyJSON(false);
   Log.setIncludeTimestamp(false);
   Log.setCustomLogger(customerTestLogger);
+  Log.setPrettyPrintFunctions(true);
 
   //Test
   Log.log("This is some test JSON {0}", testJSON);
   Log.setPrettyJSON(true);
+  Log.setPrettyPrintFunctions(false);
 
   expect(gotResult).toBe(testResult);
 });
@@ -895,10 +897,12 @@ test("Check JSON key ordering, case sensitive sort", () => {
   Log.setIncludeTimestamp(false);
   Log.setCustomLogger(customerTestLogger);
   Log.setSortObjectKeys(true, false);
+  Log.setPrettyPrintFunctions(true);
 
   //Test
   Log.log("This is some test JSON {0}", testJSON);
   Log.setPrettyJSON(true);
+  Log.setPrettyPrintFunctions(false);
 
   expect(gotResult).toBe(testResult);
 });
@@ -926,10 +930,12 @@ test("Check JSON key ordering, case insensitive sort", () => {
   Log.setIncludeTimestamp(false);
   Log.setCustomLogger(customerTestLogger);
   Log.setSortObjectKeys(true, true);
+  Log.setPrettyPrintFunctions(true);
 
   //Test
   Log.log("This is some test JSON {0}", testJSON);
   Log.setPrettyJSON(true);
+  Log.setPrettyPrintFunctions(false);
 
   expect(gotResult).toBe(testResult);
 });
@@ -957,11 +963,13 @@ test("Check JSON key ordering as given", () => {
   Log.setIncludeTimestamp(false);
   Log.setCustomLogger(customerTestLogger);
   Log.setSortObjectKeys(false, false);
+  Log.setPrettyPrintFunctions(true);
 
   //Test
   Log.log("This is some test JSON {0}", testJSON);
   Log.setPrettyJSON(true);
   Log.setSortObjectKeys(true, false);
+  Log.setPrettyPrintFunctions(false);
 
   expect(gotResult).toBe(testResult);
 });

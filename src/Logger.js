@@ -399,7 +399,7 @@ class Logger {
       prettyPadding: getSpacePadding(DEFAULT_PRETTY_PADDING_COUNT),
       sortObjectKeys: true,
       sortObjectKeysCaseInsensitive: false,
-      prettyPrintFunctions: true,
+      prettyPrintFunctions: false,
       prettyPrintNull: true,
       prettyPrintUndefined: true,
       prettyPrintIncludeKeyLengthInPadding: false,

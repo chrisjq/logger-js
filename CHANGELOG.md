@@ -1,3 +1,10 @@
+# 1.1.7 / 2019-07-20
+
+- Fixed spelling in docs.
+- Changed default so functions are not printed.
+- Log levels are exported in index.js.
+- Package name same as readme name description.
+
 # 1.1.6 / 2019-07-13
 
 - Fixed tests.

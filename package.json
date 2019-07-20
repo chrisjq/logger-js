@@ -1,7 +1,7 @@
 {
   "name": "@chrisq/logger-js",
-  "version": "1.1.6",
-  "description": "Java style logger - easy variable parameterization for logging.",
+  "version": "1.1.7",
+  "description": "Java style logger for es6/node.js/react native logging with easy parameterization of objects.",
   "main": "index.js",
   "author": "Chris Quin<chrisq@ingenuity.kiwi>",
   "license": "MIT",

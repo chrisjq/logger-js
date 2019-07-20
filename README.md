@@ -1,6 +1,6 @@
 # logger-js
 
-Java style logger for easy es6/node.js/react native logging.
+Java style logger for es6/node.js/react native logging with easy parameterization of objects.
 
 Parameter {0}, {1}, {2} ... {number} replaced with strings of values of objects(JSON output) or variables passed to function.
 
@@ -8,7 +8,7 @@ By passing objects to the logger when disabled the logging variables are not ser
 
 For multiple object references to prevent circular printing issues the reference to the first seen object is printed as a quoted string value @ref:/path/to/object or @ref:/path/to/object/array/item/[index]
 
-Prints functions as "[function]", null as "null", undefined as "undefined" unquoted.
+Prints functions as "[function]", null as "null", undefined as "undefined" unquoted. By default functions are not printed.
 Text is only quoted if part of a JSON object value.
 
 (https://github.com/chrisjq/logger-js.git)
@@ -48,13 +48,13 @@ Text is only quoted if part of a JSON object value.
 - **Log.setLoggingEnabled(bool)** - Enable logging. Default is true.
 - **Log.setPrettyJSON(bool)** - Pretty print JSON. Default is true.
 - **Log.setWriteLevel(bool)** - Include the write level in output e.g. INFO:. Default is true.
-- **Log.setIncludeTimestamp(bool)** - Include timestame in output. Default is true.
+- **Log.setIncludeTimestamp(bool)** - Include time stamp in output. Default is true.
 - **Log.setSplitLogCharSize(number)** - Set to split a very large log at the specified character count. e.g. Log.setSplitLogCharSize(4000); //Useful for adb logcat so the log isn't truncated. Default is null.
-- **Log.setSplitLogCheckNewlineSize(number)** - Split on a neline if it is within the character count threshold given. Default is 200 characters.
-- **Log.setPrettyNewLine(string)** - The newline string to use for pretty JSON. Default is neline character.
+- **Log.setSplitLogCheckNewlineSize(number)** - Split on a newline if it is within the character count threshold given. Default is 200 characters.
+- **Log.setPrettyNewLine(string)** - The newline string to use for pretty JSON. Default is newline character.
 - **Log.setPrettyPaddingCount(number)** - The pretty printed JSON padding to be added to each level. Default 2
 - **Log.setSortObjectKeys(sortEnabledBool, caseInsensitiveBool)** - Whether to sort the JSON keys alphabetically and if enabled whether the sort is case sensitive. Default sortEnabledBool = true, caseInsensitiveBool = false
-- **Log.setPrettyPrintFunctions(bool)** - Pretty print JSON functions as [function]. Default is true.
+- **Log.setPrettyPrintFunctions(bool)** - Pretty print JSON functions as [function]. Default is false.
 - **Log.setPrettyPrintNull(bool)** - Pretty print JSON nulls as null. Default is true.
 - **Log.setPrettyPrintUndefined(bool)** - Pretty print JSON undefined as undefined. Default is true.
 - **Log.setPrettyPrintIncludeKeyLengthInPadding(bool)** - Pretty print JSON, include key length in padding. Default is false.
