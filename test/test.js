@@ -1363,3 +1363,43 @@ test("Test very large string split on newline", () => {
   expect(sizeCheck[0]).toBe(4056);
   expect(sizeCheck[1]).toBe(945);
 });
+
+test("Check JSON special characters", () => {
+  const testJSON = {
+    test4: "\\ \\\\ \r \\a \n \t \f \b",
+    test1: "hello\\how\\are\\t\\you",
+    test2: "quote ' yo \" ",
+    test3: undefined,
+    Test5: function() {},
+  };
+
+  const testResult =
+    'INFO: This is some test JSON { test4: "\\\\ \\\\\\\\ \\r \\\\a \\n \\t \\f \\b", test1: "hello\\\\how\\\\are\\\\t\\\\you", test2: "quote \' yo \\" ", test3: undefined, Test5: [function] }';
+  var gotResult = null;
+
+  const customerTestLogger = (text) => {
+    gotResult = text;
+
+    console.log(text);
+  };
+
+  //Setup
+  Log.setPrettyJSON(false);
+  Log.setIncludeTimestamp(false);
+  Log.setCustomLogger(customerTestLogger);
+  Log.setSortObjectKeys(false, false);
+  Log.setPrettyPrintFunctions(true);
+  Log.setPrettyPrintNull(false);
+  Log.setPrettyPrintUndefined(true);
+  Log.setReplaceSpecialCharacterInJSONString(true);
+
+  //Test
+  Log.log("This is some test JSON {0}", testJSON);
+  Log.setPrettyJSON(true);
+  Log.setSortObjectKeys(true, false);
+  Log.setPrettyPrintFunctions(true);
+  Log.setPrettyPrintNull(true);
+  Log.setPrettyPrintUndefined(true);
+
+  expect(gotResult).toBe(testResult);
+});

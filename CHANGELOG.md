@@ -1,3 +1,7 @@
+# 1.1.7 / 2019-11-26
+
+- Convert all JSON special characters.
+
 # 1.1.7 / 2019-07-20
 
 - Fixed spelling in docs.

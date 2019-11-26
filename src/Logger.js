@@ -36,7 +36,76 @@ const NEWLINE = "\n"; //Default newline character
 const DEFAULT_PRETTY_PADDING_COUNT = 2; //Default padding for pretty print.
 
 function replaceSpecialChars(s) {
-  return s.replace(/\n/g, "\\n").replace(/\r/g, "\\r");
+  if (s == undefined) {
+    return undefined;
+  } else if (s == null) {
+    return null;
+  }
+
+  let ret = "";
+
+  if (s && s.length > 0) {
+    for (let i = 0; i < s.length; i++) {
+      let skip = false;
+      let c = s[i];
+      let pC = null;
+      switch (c) {
+        case "\n":
+          ret += "\\n";
+          break;
+        case "\r":
+          ret += "\\r";
+          break;
+        case "\0":
+          ret += "\\0";
+          break;
+        case "\b":
+          ret += "\\b";
+          break;
+        case "\v":
+          ret += "\\v";
+          break;
+        case "\t":
+          ret += "\\t";
+          break;
+        case "\f":
+          ret += "\\f";
+          break;
+        /*
+        case "'":
+          if (pC != "\\") {
+            ret += "'";
+          } else {
+            skip = true;
+          }
+          break;
+          */
+        case '"':
+          if (pC != "\\") {
+            ret += '\\"';
+          } else {
+            skip = true;
+          }
+          break;
+        case "\\":
+          if (pC != "\\") {
+            ret += "\\\\";
+          } else {
+            skip = true;
+          }
+          break;
+        default:
+          ret += c;
+          break;
+      }
+
+      if (!skip) {
+        pC = c;
+      }
+    }
+  }
+
+  return ret;
 }
 /**
 Pad 2 digit number
