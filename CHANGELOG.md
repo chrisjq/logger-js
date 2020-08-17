@@ -1,4 +1,8 @@
-# 1.1.7 / 2019-11-26
+# 1.1.9 / 2020-08-17
+
+- Updated dependencies
+
+# 1.1.8 / 2019-11-26
 
 - Convert all JSON special characters.
 
