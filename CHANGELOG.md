@@ -1,3 +1,7 @@
+# 1.1.10 / 2021-05-04
+
+- Updated dependencies
+
 # 1.1.9 / 2020-08-17
 
 - Updated dependencies
