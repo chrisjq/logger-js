@@ -35,6 +35,44 @@ export const ALL = 0;
 const NEWLINE = "\n"; //Default newline character
 const DEFAULT_PRETTY_PADDING_COUNT = 2; //Default padding for pretty print.
 
+const DEFAULT_CONFIG = {
+  logLevel: ALL,
+  loggingEnabled: true,
+  prettyJSON: true,
+  writeLevel: true,
+  includeTimestamp: true,
+  splitLogCharSize: null,
+  splitLogCheckNewlineSize: 200,
+  prettyNewLine: NEWLINE,
+  prettyPadding: getSpacePadding(DEFAULT_PRETTY_PADDING_COUNT),
+  sortObjectKeys: true,
+  sortObjectKeysCaseInsensitive: false,
+  prettyPrintFunctions: false,
+  prettyPrintNull: true,
+  prettyPrintUndefined: true,
+  prettyPrintIncludeKeyLengthInPadding: false,
+  replaceSpecialCharacterInJSONString: false,
+};
+
+function getLoggerTimeStampString() {
+  let now = new Date();
+  return (
+    now.getFullYear() +
+    "-" +
+    pad2Digit(now.getMonth() + 1) +
+    "-" +
+    pad2Digit(now.getDate()) +
+    " " +
+    pad2Digit(now.getHours()) +
+    ":" +
+    pad2Digit(now.getMinutes()) +
+    ":" +
+    pad2Digit(now.getSeconds()) +
+    "." +
+    pad3Digit(now.getMilliseconds())
+  );
+}
+
 function replaceSpecialChars(s) {
   if (s == undefined) {
     return undefined;
@@ -71,15 +109,6 @@ function replaceSpecialChars(s) {
         case "\f":
           ret += "\\f";
           break;
-        /*
-        case "'":
-          if (pC != "\\") {
-            ret += "'";
-          } else {
-            skip = true;
-          }
-          break;
-          */
         case '"':
           if (pC != "\\") {
             ret += '\\"';
@@ -107,6 +136,7 @@ function replaceSpecialChars(s) {
 
   return ret;
 }
+
 /**
 Pad 2 digit number
 */
@@ -454,26 +484,9 @@ function putSeenNode(seenNodes, path, originalObject) {
 Main Logger class.
 */
 class Logger {
-  constructor(customWriter) {
-    this.customWriter = customWriter ? customWriter : null;
-    this.cfg = {
-      logLevel: ALL,
-      loggingEnabled: true,
-      prettyJSON: true,
-      writeLevel: true,
-      includeTimestamp: true,
-      splitLogCharSize: null,
-      splitLogCheckNewlineSize: 200,
-      prettyNewLine: NEWLINE,
-      prettyPadding: getSpacePadding(DEFAULT_PRETTY_PADDING_COUNT),
-      sortObjectKeys: true,
-      sortObjectKeysCaseInsensitive: false,
-      prettyPrintFunctions: false,
-      prettyPrintNull: true,
-      prettyPrintUndefined: true,
-      prettyPrintIncludeKeyLengthInPadding: false,
-      replaceSpecialCharacterInJSONString: false,
-    };
+  constructor(logger, cfg) {
+    this.outputLogger = logger ? logger : (text) => console.log(text);
+    this.cfg = Object.assign(DEFAULT_CONFIG, cfg);
   }
 
   //Instance logging, to enable or disable at the instace level
@@ -545,7 +558,7 @@ class Logger {
   };
 
   setCustomLogger = (customWriter) => {
-    this.customWriter = customWriter;
+    this.outputLogger = customWriter;
   };
 
   setLogLevel = (number) => {
@@ -722,27 +735,11 @@ Main logging method to create the log string.
           }
         }
 
-        if (this.includeTimestamp) {
-          let now = new Date();
-          logText =
-            now.getFullYear() +
-            "-" +
-            pad2Digit(now.getMonth() + 1) +
-            "-" +
-            pad2Digit(now.getDate()) +
-            " " +
-            pad2Digit(now.getHours()) +
-            ":" +
-            pad2Digit(now.getMinutes()) +
-            ":" +
-            pad2Digit(now.getSeconds()) +
-            "." +
-            pad3Digit(now.getMilliseconds()) +
-            " - " +
-            logText;
+        if (this.cfg.includeTimestamp) {
+          logText = getLoggerTimeStampString() + " - " + logText;
         }
 
-        if (logText) {
+        if (logText && this.outputLogger) {
           if (this.cfg.splitLogCharSize && logText.length > this.cfg.splitLogCharSize) {
             let charsLeft = logText.length;
             let printArray = [];
@@ -774,18 +771,10 @@ Main logging method to create the log string.
             }
 
             for (let i = 0; i < printArray.length; i++) {
-              if (this.customWriter) {
-                this.customWriter(printArray[i]);
-              } else {
-                console.log(printArray[i]);
-              }
+              this.outputLogger(printArray[i]);
             }
           } else {
-            if (this.customWriter) {
-              this.customWriter(logText);
-            } else {
-              console.log(logText);
-            }
+            this.outputLogger(logText);
           }
         }
       }
