@@ -14,7 +14,6 @@ test("Check basic log INFO", () => {
 
   const customerTestLogger = (text) => {
     gotResult = text;
-
     console.log(text);
   };
 
@@ -38,7 +37,6 @@ test("Check basic log SEVERE", () => {
 
   const customerTestLogger = (text) => {
     gotResult = text;
-
     console.log(text);
   };
 
@@ -62,7 +60,6 @@ test("Check basic log WARNING", () => {
 
   const customerTestLogger = (text) => {
     gotResult = text;
-
     console.log(text);
   };
 
@@ -86,7 +83,6 @@ test("Check basic log INFO", () => {
 
   const customerTestLogger = (text) => {
     gotResult = text;
-
     console.log(text);
   };
 
@@ -110,7 +106,6 @@ test("Check basic log CONFIG", () => {
 
   const customerTestLogger = (text) => {
     gotResult = text;
-
     console.log(text);
   };
 
@@ -134,7 +129,6 @@ test("Check basic log FINE", () => {
 
   const customerTestLogger = (text) => {
     gotResult = text;
-
     console.log(text);
   };
 
@@ -158,7 +152,6 @@ test("Check basic log FINER", () => {
 
   const customerTestLogger = (text) => {
     gotResult = text;
-
     console.log(text);
   };
 
@@ -182,7 +175,6 @@ test("Check basic log FINEST", () => {
 
   const customerTestLogger = (text) => {
     gotResult = text;
-
     console.log(text);
   };
 
@@ -208,7 +200,6 @@ test("Check instance log INFO", () => {
 
   const customerTestLogger = (text) => {
     gotResult = text;
-
     console.log(text);
   };
 
@@ -233,7 +224,6 @@ test("Check instance log SEVERE", () => {
 
   const customerTestLogger = (text) => {
     gotResult = text;
-
     console.log(text);
   };
 
@@ -258,7 +248,6 @@ test("Check instance log WARNING", () => {
 
   const customerTestLogger = (text) => {
     gotResult = text;
-
     console.log(text);
   };
 
@@ -283,7 +272,6 @@ test("Check instance log INFO", () => {
 
   const customerTestLogger = (text) => {
     gotResult = text;
-
     console.log(text);
   };
 
@@ -308,7 +296,6 @@ test("Check instance log CONFIG", () => {
 
   const customerTestLogger = (text) => {
     gotResult = text;
-
     console.log(text);
   };
 
@@ -333,7 +320,6 @@ test("Check instance log FINE", () => {
 
   const customerTestLogger = (text) => {
     gotResult = text;
-
     console.log(text);
   };
 
@@ -358,7 +344,6 @@ test("Check instance log FINER", () => {
 
   const customerTestLogger = (text) => {
     gotResult = text;
-
     console.log(text);
   };
 
@@ -383,7 +368,6 @@ test("Check instance log FINEST", () => {
 
   const customerTestLogger = (text) => {
     gotResult = text;
-
     console.log(text);
   };
 
@@ -406,7 +390,6 @@ test("Check varable", () => {
 
   const customerTestLogger = (text) => {
     gotResult = text;
-
     console.log(text);
   };
 
@@ -428,7 +411,6 @@ test("Check not whiting log level", () => {
 
   const customerTestLogger = (text) => {
     gotResult = text;
-
     console.log(text);
   };
 
@@ -452,7 +434,6 @@ test("Check logging disabled", () => {
 
   const customerTestLogger = (text) => {
     gotResult = text;
-
     console.log(text);
   };
 
@@ -479,7 +460,6 @@ test("Check non-pretty json", () => {
 
   const customerTestLogger = (text) => {
     gotResult = text;
-
     console.log(text);
   };
 
@@ -582,7 +562,6 @@ test("Check no objects passed log INFO", () => {
 
   const customerTestLogger = (text) => {
     gotResult = text;
-
     console.log(text);
   };
 
@@ -619,7 +598,6 @@ test("Check cyclic JSON", () => {
 
   const customerTestLogger = (text) => {
     gotResult = text;
-
     console.log(text);
   };
 
@@ -662,7 +640,6 @@ test("Check cyclic JSON - multiple references", () => {
 
   const customerTestLogger = (text) => {
     gotResult = text;
-
     console.log(text);
   };
 
@@ -705,7 +682,6 @@ test("Check cyclic JSON for array item", () => {
 
   const customerTestLogger = (text) => {
     gotResult = text;
-
     console.log(text);
   };
 
@@ -781,7 +757,6 @@ test("Check all types in JSON", () => {
 
   const customerTestLogger = (text) => {
     gotResult = text;
-
     console.log(text);
   };
 
@@ -813,7 +788,6 @@ test("Check all types as parameters", () => {
 
   const customerTestLogger = (text) => {
     gotResult = text;
-
     console.log(text);
   };
 
@@ -850,7 +824,6 @@ test("Check JSON default key ordering", () => {
 
   const customerTestLogger = (text) => {
     gotResult = text;
-
     console.log(text);
   };
 
@@ -888,7 +861,6 @@ test("Check JSON key ordering, case sensitive sort", () => {
 
   const customerTestLogger = (text) => {
     gotResult = text;
-
     console.log(text);
   };
 
@@ -921,7 +893,6 @@ test("Check JSON key ordering, case insensitive sort", () => {
 
   const customerTestLogger = (text) => {
     gotResult = text;
-
     console.log(text);
   };
 
@@ -954,7 +925,6 @@ test("Check JSON key ordering as given", () => {
 
   const customerTestLogger = (text) => {
     gotResult = text;
-
     console.log(text);
   };
 
@@ -988,7 +958,6 @@ test("Check basic log INFO with parameter order maintained", () => {
 
   const customerTestLogger = (text) => {
     gotResult = text;
-
     console.log(text);
   };
 
@@ -1026,7 +995,6 @@ test("Check basic log INFO with parameter order maintained", () => {
 
   const customerTestLogger = (text) => {
     gotResult = text;
-
     console.log(text);
   };
 
@@ -1056,7 +1024,6 @@ test("Check basic log INFO with only parameter", () => {
 
   const customerTestLogger = (text) => {
     gotResult = text;
-
     console.log(text);
   };
 
@@ -1087,7 +1054,6 @@ test("Check JSON no null printed", () => {
 
   const customerTestLogger = (text) => {
     gotResult = text;
-
     console.log(text);
   };
 
@@ -1125,7 +1091,6 @@ test("Check JSON no undefined printed", () => {
 
   const customerTestLogger = (text) => {
     gotResult = text;
-
     console.log(text);
   };
 
@@ -1163,7 +1128,6 @@ test("Check JSON no functions printed", () => {
 
   const customerTestLogger = (text) => {
     gotResult = text;
-
     console.log(text);
   };
 
@@ -1217,7 +1181,6 @@ test("Check JSON Pretty with key length added", () => {
 
   const customerTestLogger = (text) => {
     gotResult = text;
-
     console.log(text);
   };
 
@@ -1267,7 +1230,6 @@ test("Check JSON Pretty without key length added", () => {
 
   const customerTestLogger = (text) => {
     gotResult = text;
-
     console.log(text);
   };
 
@@ -1301,7 +1263,6 @@ test("Check JSON no null printed", () => {
 
   const customerTestLogger = (text) => {
     gotResult = text;
-
     console.log(text);
   };
 
@@ -1379,7 +1340,6 @@ test("Check JSON special characters", () => {
 
   const customerTestLogger = (text) => {
     gotResult = text;
-
     console.log(text);
   };
 
